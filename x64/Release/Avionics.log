@@ -1,9 +1,0 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(373,5): warning MSB8004: Das Output-Verzeichnis endet nicht mit einem nachstehenden Schrägstrich. Der Schrägstrich wird in dieser Buildinstanz hinzugefügt, da er für die ordnungsgemäße Auswertung des Output-Verzeichnisses erforderlich ist.
-  AirportMap.cpp
-AirportMap.cpp(122): warning C4244: "Argument": Konvertierung von "int" in "float", möglicher Datenverlust
-AirportMap.cpp(124): warning C4244: "Argument": Konvertierung von "int" in "float", möglicher Datenverlust
-AirportMap.cpp(126): warning C4244: "Argument": Konvertierung von "int" in "float", möglicher Datenverlust
-AirportMap.cpp(128): warning C4244: "Argument": Konvertierung von "int" in "float", möglicher Datenverlust
-     Bibliothek "C:\Users\halex\Desktop\xDev\CSeries\Plugins\Avionics\Avionics\\Output\win.lib" und Objekt "C:\Users\halex\Desktop\xDev\CSeries\Plugins\Avionics\Avionics\\Output\win.exp" werden erstellt.
-  LINK : /LTCG wurde angegeben, es ist jedoch keine Codegenerierung erforderlich. Entfernen Sie /LTCG aus der Linkbefehlszeile, um die Linkerleistung zu erhöhen.
-  Avionics.vcxproj -> C:\Users\halex\Desktop\xDev\CSeries\Plugins\Avionics\Avionics\\Output\win.xpl
