@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Quelldateien\DisplayElements">
+      <UniqueIdentifier>{49a3df74-b98e-4601-9cff-f191e8806c48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\DisplayElements">
+      <UniqueIdentifier>{87cade99-fd75-43fa-a82d-2206bff2afc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\DisplayElements\BasicElements">
+      <UniqueIdentifier>{4cd1860b-1b8b-4326-b16e-b65766c14b81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\DisplayElements\BasicElements">
+      <UniqueIdentifier>{82ce84c9-6144-4b84-92ab-f83aa2b663a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\DisplayElements\ComplexElements">
+      <UniqueIdentifier>{8694adde-3c6e-4eac-830e-141d8e10e221}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\DisplayElements\ComplexElements">
+      <UniqueIdentifier>{1f4a4030-7fe6-4a56-a4f2-93958b5a37c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\HelperClasses">
+      <UniqueIdentifier>{7ab905ef-058f-4a03-a318-3b50f7de06df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\HelperClasses">
+      <UniqueIdentifier>{011f4d5c-88a8-466d-8cd5-e135fd4c5d0c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DisplayElement.h">
+      <Filter>Headerdateien\DisplayElements</Filter>
+    </ClInclude>
+    <ClInclude Include="PFDGyro.h">
+      <Filter>Headerdateien\DisplayElements\ComplexElements</Filter>
+    </ClInclude>
+    <ClInclude Include="PFDIndicatorCAS.h">
+      <Filter>Headerdateien\DisplayElements\ComplexElements</Filter>
+    </ClInclude>
+    <ClInclude Include="PFDIndicatorAltitude.h">
+      <Filter>Headerdateien\DisplayElements\ComplexElements</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayElementFBO.h">
+      <Filter>Headerdateien\DisplayElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Container.h">
+      <Filter>Headerdateien\DisplayElements\BasicElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Headerdateien\DisplayElements\BasicElements</Filter>
+    </ClInclude>
+    <ClInclude Include="TextBox.h">
+      <Filter>Headerdateien\DisplayElements\BasicElements</Filter>
+    </ClInclude>
+    <ClInclude Include="PFD.h">
+      <Filter>Headerdateien\DisplayElements\ComplexElements</Filter>
+    </ClInclude>
+    <ClInclude Include="TextSimple.h">
+      <Filter>Headerdateien\DisplayElements\BasicElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Display.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularProgressGauge.h">
+      <Filter>Headerdateien\DisplayElements\BasicElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Headerdateien\HelperClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Airport.h">
+      <Filter>Headerdateien\HelperClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="UTM.h">
+      <Filter>Headerdateien\HelperClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="AirportMap.h">
+      <Filter>Headerdateien\DisplayElements\ComplexElements</Filter>
+    </ClInclude>
+    <ClInclude Include="NavRose.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Display.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayElement.cpp">
+      <Filter>Quelldateien\DisplayElements</Filter>
+    </ClCompile>
+    <ClCompile Include="PFDGyro.cpp">
+      <Filter>Quelldateien\DisplayElements\ComplexElements</Filter>
+    </ClCompile>
+    <ClCompile Include="PFDIndicatorCAS.cpp">
+      <Filter>Quelldateien\DisplayElements\ComplexElements</Filter>
+    </ClCompile>
+    <ClCompile Include="PFDIndicatorAltitude.cpp">
+      <Filter>Quelldateien\DisplayElements\ComplexElements</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayElementFBO.cpp">
+      <Filter>Quelldateien\DisplayElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Container.cpp">
+      <Filter>Quelldateien\DisplayElements\BasicElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Quelldateien\DisplayElements\BasicElements</Filter>
+    </ClCompile>
+    <ClCompile Include="TextBox.cpp">
+      <Filter>Quelldateien\DisplayElements\BasicElements</Filter>
+    </ClCompile>
+    <ClCompile Include="PFD.cpp">
+      <Filter>Quelldateien\DisplayElements\ComplexElements</Filter>
+    </ClCompile>
+    <ClCompile Include="TextSimple.cpp">
+      <Filter>Quelldateien\DisplayElements\BasicElements</Filter>
+    </ClCompile>
+    <ClCompile Include="CircularProgressGauge.cpp">
+      <Filter>Quelldateien\DisplayElements\BasicElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Quelldateien\HelperClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Airport.cpp">
+      <Filter>Quelldateien\HelperClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="UTM.cpp">
+      <Filter>Quelldateien\HelperClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="AirportMap.cpp">
+      <Filter>Quelldateien\DisplayElements\ComplexElements</Filter>
+    </ClCompile>
+    <ClCompile Include="NavRose.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
