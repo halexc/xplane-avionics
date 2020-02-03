@@ -34,7 +34,7 @@ void AirportMap::drawTex()
 
 	if (!valid) {
 
-		XPLMDebugString("AirportMap.cpp: Redrawing Airport Map.\n");
+		//XPLMDebugString("AirportMap.cpp: Redrawing Airport Map.\n");
 		if (!Utils::InitFBO(&fboMap, &texMap, (int) (sizeX * 1024 / scale), (int) (sizeY * 1024 / scale), GL_RGBA)) {
 			XPLMDebugString("AirportMap.cpp: Error when setting up Map framebuffer.\n");
 		}
@@ -48,7 +48,7 @@ void AirportMap::drawTex()
 		glPushMatrix();
 		glLoadIdentity();
 		glOrtho(minX - puffer, maxX + puffer, minY - puffer, maxY + puffer, -1, 1);
-
+		/*
 		XPLMDebugString("Airport bounds:\nHorizontal: ");
 		XPLMDebugString(std::to_string(minX).c_str());
 		XPLMDebugString(", ");
@@ -58,7 +58,7 @@ void AirportMap::drawTex()
 		XPLMDebugString(", ");
 		XPLMDebugString(std::to_string(maxY).c_str());
 		XPLMDebugString(".\n");
-
+		*/
 		GLint oldView[4];
 		glGetIntegerv(GL_VIEWPORT, oldView);
 
@@ -109,14 +109,7 @@ void AirportMap::drawTex()
 	float addY = sizeY / scale * height / 2;
 	
 	XPLMBindTexture2d(texMap, 0);
-	/*
-	glBegin(GL_QUADS);
-		glTexCoord2f(0, 0); glVertex2f(0, 0);
-		glTexCoord2f(0, 1); glVertex2f(0, height);
-		glTexCoord2f(1, 1); glVertex2f(width, height);
-		glTexCoord2f(1, 0); glVertex2f(width, 0);
-	glEnd();
-	*/
+
 	glBegin(GL_QUADS);
 		float px, py;
 		Utils::calcRotatedPoint(width / 2 - addX + offsetCX, height / 2 - addY + offsetCY, hdg * (float) M_PI / 180, &px, &py, width / 2, height / 2);

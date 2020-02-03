@@ -12,11 +12,45 @@ public:
 	void drawTex();
 	void update();
 
-	//Map scale: meters mapped across the width of the map (on screen)
+	/** void setScale(float scale)
+	*
+	*	Parameters:
+	*	- float scale: Distance to be mapped across the width
+	*
+	*	Use:
+	*	Set the scale of the map.
+	*/
 	void setScale(float scale);
+
+	/** void setDataSource_GPS(float * lat, float * lon)
+	*
+	*	Parameters:
+	*	- float * lat: Adress of where to get latitude data
+	*	- float * lon: Adress of where to get longitude data
+	*	
+	*	Use:
+	*	Set the data sources for positional data.
+	*/
 	void setDataSource_GPS(float * lat, float * lon);
+
+	/** void setDataSource_hdg(float * hdg)
+	*
+	*	Parameters:
+	*	- float * hdg: Adress of where to get HDG data
+	*
+	*	Use:
+	*	Set the data sources for heading data.
+	*/
 	void setDataSource_hdg(float * hdg);
-	
+
+	/** void setAirport(Airport * apt)
+	*
+	*	Parameters:
+	*	- Airport * apt: Airport data from which to draw
+	*
+	*	Use:
+	*	Set the airport from which the data for drawing is taken.
+	*/
 	void setAirport(Airport * apt);
 
 private:

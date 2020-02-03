@@ -221,14 +221,14 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 	
 	XPLMDebugString("main.cpp: Loading airport data.\n");
 	strcpy(tmpPath, resPath);
-	strcat(tmpPath, "ESGG_aptdat.txt");
+	strcat(tmpPath, "EDDL_aptdat.txt");
 	Airport * apt = new Airport();
-	if (apt->loadAirport(tmpPath, "ESGG")) XPLMDebugString("main.cpp: Successfully loaded Airport data for ESGG.\n");
+	if (apt->loadAirport(tmpPath, "EDDL")) XPLMDebugString("main.cpp: Successfully loaded Airport data for EDDL.\n");
 
 	AirportMap * map = new AirportMap();
 	map->setAirport(apt);
 	map->setBounds(0, 0, 384, 512);
-	map->setScale(1852 / 2);
+	map->setScale(1852);
 	map->setDataSource_hdg(&(hdg_data[0]));
 	map->setDataSource_GPS(&(gps_data_lat[0]), &(gps_data_lon[0]));
 	navPage->addElement(map);

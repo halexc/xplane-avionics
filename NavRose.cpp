@@ -52,7 +52,7 @@ void NavRose::draw()
 	//Draw Hdg Indicator:
 	if (!faceNorth) {
 		float xs[] = { x + 0.425f * width,	x + 0.425f * width,		x + 0.575f * width,		x + 0.575f * width,		x + 0.535f * width,		x + 0.5f * width,		x + 0.465f * width, 	x + 0.425f * width };
-		float ys[] = { y + 0.925f * height,	y + 0.99f * height,		y + 0.99f * height,		y + 0.925f * height,	y + 0.925f * height,	y + 0.9f * height,		y + 0.925f * height,	y + 0.925f * height };
+		float ys[] = { y + 0.9175f * height,	y + 0.99f * height,		y + 0.99f * height,		y + 0.9175f * height,	y + 0.9175f * height,	y + 0.9f * height,		y + 0.9175f * height,	y + 0.9175f * height };
 		XPLMBindTexture2d(0, 0);
 		glColor3fv(Utils::COLOR_BLACK);
 		glBegin(GL_QUADS);
@@ -68,16 +68,20 @@ void NavRose::draw()
 		glEnd();
 		Utils::DrawLinesConnected(xs, ys, 8, Utils::COLOR_WHITE, 0.0125f * radius);
 		float tw = Utils::GetTextWidth(std::to_string((int)roundf(hdg)).c_str(), *font, 2 * textSize);
-		Utils::RenderText(std::to_string((int)roundf(hdg)).c_str(), *font, x + width / 2 - tw / 2, y + 0.9325f * height, 2 * textSize);
+		Utils::RenderText(std::to_string((int)roundf(hdg)).c_str(), *font, x + width / 2 - tw / 2, y + 0.925f * height, 2 * textSize);
 	}
 	//Draw "plane":
 	if (faceNorth && hdg_data) hdg = *hdg_data;
 	else hdg = 0;
-	Utils::DrawLine(x + 0.5f * width, y + 0.45f * height, x + 0.5f * width, y + 0.55f * height, Utils::COLOR_FUCHSIA, 0.025f * radius);
-	Utils::DrawLine(x + 0.45f * width, y + 0.475f * height, x + 0.5f * width, y + 0.525f * height, Utils::COLOR_FUCHSIA, 0.025f * radius);
-	Utils::DrawLine(x + 0.55f * width, y + 0.475f * height, x + 0.5f * width, y + 0.525f * height, Utils::COLOR_FUCHSIA, 0.025f * radius);
-	Utils::DrawLine(x + 0.475f * width, y + 0.425f * height, x + 0.5f * width, y + 0.45f * height, Utils::COLOR_FUCHSIA, 0.025f * radius);
-	Utils::DrawLine(x + 0.525f * width, y + 0.425f * height, x + 0.5f * width, y + 0.45f * height, Utils::COLOR_FUCHSIA, 0.025f * radius);
+	Utils::DrawLine(x + 0.5f * width, y + 0.465f * height, x + 0.5f * width, y + 0.535f * height, Utils::COLOR_FUCHSIA, 0.0175f * radius);
+	Utils::DrawLine(x + 0.455f * width, y + 0.48f * height, x + 0.5f * width, y + 0.52f * height, Utils::COLOR_FUCHSIA, 0.0175f * radius);
+	Utils::DrawLine(x + 0.545f * width, y + 0.48f * height, x + 0.5f * width, y + 0.52f * height, Utils::COLOR_FUCHSIA, 0.0175f * radius);
+	Utils::DrawLine(x + 0.455f * width, y + 0.48f * height, x + 0.5f * width, y + 0.5125f * height, Utils::COLOR_FUCHSIA, 0.0175f * radius);
+	Utils::DrawLine(x + 0.545f * width, y + 0.48f * height, x + 0.5f * width, y + 0.5125f * height, Utils::COLOR_FUCHSIA, 0.0175f * radius);
+	Utils::DrawLine(x + 0.48f * width, y + 0.445f * height, x + 0.5f * width, y + 0.465f * height, Utils::COLOR_FUCHSIA, 0.0175f * radius);
+	Utils::DrawLine(x + 0.52f * width, y + 0.445f * height, x + 0.5f * width, y + 0.465f * height, Utils::COLOR_FUCHSIA, 0.0175f * radius);
+	Utils::DrawLine(x + 0.48f * width, y + 0.445f * height, x + 0.5f * width, y + 0.47f * height, Utils::COLOR_FUCHSIA, 0.0175f * radius);
+	Utils::DrawLine(x + 0.52f * width, y + 0.445f * height, x + 0.5f * width, y + 0.47f * height, Utils::COLOR_FUCHSIA, 0.0175f * radius);
 }
 
 void NavRose::update()
