@@ -77,7 +77,7 @@ bool Airport::loadAirport(char * path, char * icao)
 				rw->lat1 = std::stof(rw_data[9]);
 				//Longitude:
 				rw->lon1 = std::stof(rw_data[10]);
-				
+
 				//DIR2:
 				strcpy(rw->id2, rw_data[17].c_str());
 				//Latitude
@@ -105,6 +105,45 @@ bool Airport::loadAirport(char * path, char * icao)
 
 				runways.push_back(rw);
 				continue;
+			}
+			//Parse Pavement bounds:
+			if (line.at(1) == '1' && line.at(2) == '0' && line.at(3) == ' ') {
+
+				while (infile.good() && std::getline(infile, line)) {
+					std::stringstream ssin(line);
+					std::string pvmt_data[3];
+					int i = 0;
+					while (ssin.good() && i < 3) {
+						ssin >> pvmt_data[i];
+						++i;
+					}
+
+					if (line.at(1) == '1' && line.at(3) == ' ') {
+						std::vector<Vector2f*> pvmt_vs;
+						if (line.at(2) == '1' || line.at(2) == '2') {
+							Vector2f * pos = new Vector2f;
+							float lat = std::stof(pvmt_data[1]);
+							float lon = std::stof(pvmt_data[2]);
+							UTMZone = LatLonToUTMXY(lat, lon, UTMZone, pos->x, pos->y);
+
+							pvmt_vs.push_back(pos);
+
+							continue;
+						}
+						if (line.at(2) == '3' || line.at(2) == '4') {
+							//Parse ending node
+							Vector2f * pos = new Vector2f;
+							float lat = std::stof(pvmt_data[1]);
+							float lon = std::stof(pvmt_data[2]);
+							UTMZone = LatLonToUTMXY(lat, lon, UTMZone, pos->x, pos->y);
+
+							pvmt_vs.push_back(pos);
+							pvmt_vs.push_back(pvmt_vs.at(0));
+
+							break;
+						}
+					}
+				}
 			}
 			//Parse Taxiway Nodes:
 			if (line.at(1) == '2' && line.at(2) == '0' && line.at(3) == '1') {
@@ -300,4 +339,13 @@ std::list<Gate*> & Airport::getGates()
 std::list<Runway*> & Airport::getRunways()
 {
 	return runways;
+}
+
+std::list<std::vector<Vector2f*>> Airport::triangulatePolygon(std::vector<Vector2f*>)
+{
+	std::list<std::vector<Vector2f*>> list = std::list<std::vector<Vector2f*>>();
+
+	
+
+	return list;
 }

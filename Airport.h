@@ -3,6 +3,7 @@
 #include "XPLMUtilities.h"
 #include <map>
 #include <list>
+#include <vector>
 
 enum NodeUse {
 	START = 1, END = 2, BOTH = 3, JUNC = 4
@@ -53,6 +54,9 @@ struct Gate {
 	float hdg;
 	GateType type;
 };
+struct Vector2f {
+	float x, y;
+};
 
 class Airport
 {
@@ -78,6 +82,10 @@ private:
 	std::list<Taxiway*> edges;
 	std::list<Gate*> gates;
 	std::list<Runway*> runways;
+
+	std::list<std::vector<Vector2f*>> pavements;
+
+	std::list<std::vector<Vector2f*>> triangulatePolygon(std::vector<Vector2f*>);
 	
 	int UTMZone = 0;
 	float minX = FLT_MAX;

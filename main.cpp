@@ -184,6 +184,12 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 
 	displays[0]->addElement(pfd_pilot);
 
+	NavRose * navRosePilot = new NavRose();
+	navRosePilot->setHdgData(&(hdg_data[0]));
+	navRosePilot->setBounds(256, -44, 256, 256);
+	navRosePilot->setFont(font_AirbusPFD);
+	displays[0]->addElement(navRosePilot);
+
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//PFD Copilot:
 	PFDGyro * gyro_copilot = new PFDGyro();
@@ -209,6 +215,7 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 
 	displays[2]->addElement(pfd_copilot);
 
+
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//MFD Pilot:
 	//Empty page:
@@ -233,11 +240,11 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 	map->setDataSource_GPS(&(gps_data_lat[0]), &(gps_data_lon[0]));
 	navPage->addElement(map);
 
-	NavRose * navRose = new NavRose();
-	navRose->setHdgData(&(hdg_data[0]));
-	navRose->setBounds(0, 64, 384, 384);
-	navRose->setFont(font_AirbusPFD);
-	navPage->addElement(navRose);
+	NavRose * navRoseND = new NavRose();
+	navRoseND->setHdgData(&(hdg_data[0]));
+	navRoseND->setBounds(0, 64, 384, 384);
+	navRoseND->setFont(font_AirbusPFD);
+	navPage->addElement(navRoseND);
 
 	//General Info Page:
 	Container * infoPage = new Container();
