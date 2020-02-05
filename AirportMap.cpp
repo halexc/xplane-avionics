@@ -65,7 +65,8 @@ void AirportMap::drawTex()
 		glViewport(0, 0, (int)(sizeX * 1024 / scale), (int)(sizeY * 1024 / scale));
 
 		//Draw:
-		drawTaxiways(15, Utils::COLOR_GRAY_LIGHT);
+		drawPavement(Utils::COLOR_GRAY_DARK);
+		drawTaxiways(15, Utils::COLOR_GRAY);
 		drawRunways(60, Utils::COLOR_TURQUOISE_BRIGHT);
 
 		glViewport(oldView[0], oldView[1], oldView[2], oldView[3]);
@@ -231,4 +232,18 @@ void AirportMap::drawTaxiways(float w, float color[3], bool drawID)
 
 void AirportMap::drawGates()
 {
+	
+}
+
+void AirportMap::drawPavement(float color[3])
+{
+	for (std::vector<Vector2f*> polygon : airport->getPavementPolygons()) {
+		XPLMBindTexture2d(0, 0);
+		glColor3fv(color);
+		glBegin(GL_TRIANGLE_FAN);
+		for (Vector2f * vertex : polygon) {
+			glVertex2f(vertex->x, vertex->y);
+		}
+		glEnd();
+	}
 }

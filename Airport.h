@@ -74,7 +74,7 @@ public:
 	std::list<Taxiway*> & getEdges();
 	std::list<Gate*> & getGates();
 	std::list<Runway*> & getRunways();
-
+	std::list<std::vector<Vector2f*>> & getPavementPolygons();
 
 private:
 	char * icaoCode = new char[5];
@@ -85,7 +85,7 @@ private:
 
 	std::list<std::vector<Vector2f*>> pavements;
 
-	std::list<std::vector<Vector2f*>> triangulatePolygon(std::vector<Vector2f*>);
+	std::list<std::vector<Vector2f*>> splitPolygon(std::vector<Vector2f*> polygon);
 	
 	int UTMZone = 0;
 	float minX = FLT_MAX;

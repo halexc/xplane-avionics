@@ -59,6 +59,7 @@ private:
 	void drawRunways(float w, float color[3], bool drawID = false);
 	void drawTaxiways(float w, float color[3], bool drawID = false);
 	void drawGates();
+	void drawPavement(float color[3]);
 
 	bool valid = false;
 

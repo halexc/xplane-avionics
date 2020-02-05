@@ -10,7 +10,6 @@
 #include <iostream>
 #include <sstream>
 
-
 Airport::Airport()
 {
 }
@@ -109,6 +108,7 @@ bool Airport::loadAirport(char * path, char * icao)
 			//Parse Pavement bounds:
 			if (line.at(1) == '1' && line.at(2) == '0' && line.at(3) == ' ') {
 
+				std::vector<Vector2f*> pvmt_vs;
 				while (infile.good() && std::getline(infile, line)) {
 					std::stringstream ssin(line);
 					std::string pvmt_data[3];
@@ -119,12 +119,19 @@ bool Airport::loadAirport(char * path, char * icao)
 					}
 
 					if (line.at(1) == '1' && line.at(3) == ' ') {
-						std::vector<Vector2f*> pvmt_vs;
 						if (line.at(2) == '1' || line.at(2) == '2') {
 							Vector2f * pos = new Vector2f;
 							float lat = std::stof(pvmt_data[1]);
 							float lon = std::stof(pvmt_data[2]);
 							UTMZone = LatLonToUTMXY(lat, lon, UTMZone, pos->x, pos->y);
+							/*
+							XPLMDebugString("Airport.cpp: Adding vertex to pavement polygon:\n");
+							XPLMDebugString("  x: ");
+							XPLMDebugString(std::to_string(pos->x).c_str());
+							XPLMDebugString(",  y: ");
+							XPLMDebugString(std::to_string(pos->y).c_str());
+							XPLMDebugString(".\n");
+							*/
 
 							pvmt_vs.push_back(pos);
 
@@ -138,7 +145,25 @@ bool Airport::loadAirport(char * path, char * icao)
 							UTMZone = LatLonToUTMXY(lat, lon, UTMZone, pos->x, pos->y);
 
 							pvmt_vs.push_back(pos);
-							pvmt_vs.push_back(pvmt_vs.at(0));
+							//pvmt_vs.push_back(pvmt_vs.at(0));
+
+							/*
+							XPLMDebugString("Airport.cpp: Adding final vertex to pavement polygon:\n");
+							XPLMDebugString("  x: ");
+							XPLMDebugString(std::to_string(pos->x).c_str());
+							XPLMDebugString(",  y: ");
+							XPLMDebugString(std::to_string(pos->y).c_str());
+							XPLMDebugString(".\n");
+
+							XPLMDebugString("\n");
+							XPLMDebugString("Splitting polygon with ");
+							XPLMDebugString(std::to_string(pvmt_vs.size()).c_str());
+							XPLMDebugString(" polygons.\n");
+							*/
+							for (std::vector<Vector2f*> polygon : splitPolygon(pvmt_vs)) {
+								pavements.push_back(polygon);
+							}
+							XPLMDebugString("\n");
 
 							break;
 						}
@@ -260,7 +285,7 @@ bool Airport::loadAirport(char * path, char * icao)
 					ssin >> gate_data[i];
 					++i;
 				}
-				XPLMDebugString("Gate Data loaded into string array.\n");
+				//XPLMDebugString("Gate Data loaded into string array.\n");
 
 				//Latitude:
 				g.lat = std::stof(gate_data[1]);
@@ -341,11 +366,97 @@ std::list<Runway*> & Airport::getRunways()
 	return runways;
 }
 
-std::list<std::vector<Vector2f*>> Airport::triangulatePolygon(std::vector<Vector2f*>)
+std::list<std::vector<Vector2f*>>& Airport::getPavementPolygons()
 {
+	return pavements;
+}
+
+std::list<std::vector<Vector2f*>> Airport::splitPolygon(std::vector<Vector2f*> polygon)
+{
+	//TODO: Fix the polygon triangulation.
+
 	std::list<std::vector<Vector2f*>> list = std::list<std::vector<Vector2f*>>();
-
+	if (polygon.size() < 3) { 
+		XPLMDebugString("Airport.cpp: No further split possible.\n");
+		return list; 
+	}
 	
+	std::vector<Vector2f*> tmp = std::vector<Vector2f*>();
+	XPLMDebugString("Airport.cpp: Current polygon consists of ");
+	XPLMDebugString(std::to_string(polygon.size()).c_str());
+	XPLMDebugString(" vertices.\n");
+	
+	//My "Convexication" Algorithm: 
+	//1.	Add Vertices as long as the connecting edge forms a convex polygon.
+	//		Since by xplane apt.dat definition all vertices are ordered in CCW
+	//		direction, this means that the polygon is still convex if the suc-
+	//		ceeding vertex is located to the left of the vertex.
+	//2.	If the successor is not on the left, we need to cut through that
+	//		vertex. To find a second vertex to which we cut from here, we go
+	//		find the first vertex to the left of the edge which would make
+	//		the polygon concave. Here, 2 cuts are made, one from each end of
+	//		aforementioned edge, resulting in a triangle and up to two new
+	//		polygons.
+	//3.	Recursively apply this algorithm to the new polygons.
+	
+	// (1)
+	for (int i = 0; i < polygon.size(); i++) {
+		Vector2f u, v;
+		XPLMDebugString("A\n");
+		u.x = polygon.at((i + 1) % polygon.size())->x - polygon.at(i)->x;
+		u.y = polygon.at((i + 1) % polygon.size())->y - polygon.at(i)->y;
+		v.x = polygon.at((i + 2) % polygon.size())->x - polygon.at((i + 1) % polygon.size())->x;
+		v.y = polygon.at((i + 2) % polygon.size())->y - polygon.at((i + 1) % polygon.size())->y;
 
+		float phi_u = atan2f(u.x, u.y);
+		float phi_v = atan2f(v.x, v.y);
+		float delta = (phi_v - phi_u) * 180 / M_PI;
+		delta = fmodf(delta + 720, 360);
+
+		if (delta < 180) {
+			tmp.push_back(polygon.at(i));
+		}
+		else {
+			XPLMDebugString("B\n");
+			tmp.clear();
+			tmp.push_back(polygon.at((i + 1) % polygon.size()));
+			tmp.push_back(polygon.at((i + 2) % polygon.size()));
+			for (int j = i + 3; j <= i + polygon.size(); j++) {
+				Vector2f w;
+				w.x = polygon.at(j % polygon.size())->x - polygon.at((i + 2) % polygon.size())->x;
+				w.y = polygon.at(j % polygon.size())->y - polygon.at((i + 2) % polygon.size())->y;
+
+				float phi_w = atan2f(w.x, w.y);
+				float delta = (phi_w - phi_v) * 180 / M_PI;
+				delta = fmodf(delta + 720, 360);
+				if (delta < 180) {
+					XPLMDebugString("Airport.cpp: Splitting polygon up...\n");
+					tmp.push_back(polygon.at(j % polygon.size()));
+					//Split:
+					std::vector<Vector2f*> fwd = std::vector<Vector2f*>();
+					std::vector<Vector2f*> bwd = std::vector<Vector2f*>();
+					for (int k = i + 2; k <= j; k++) {
+						fwd.push_back(polygon.at(k % polygon.size()));
+					}
+					for (int k = j % polygon.size() - polygon.size(); k <= (i + 1) % polygon.size(); k++) {
+						bwd.push_back(polygon.at((k + 2 * polygon.size()) % polygon.size()));
+					}
+
+					XPLMDebugString("Airport.cpp: Polygon split up into additional polygons.\n");
+					//Recursively add convex polygons:
+					for (std::vector<Vector2f*> poly : splitPolygon(fwd)) {
+						list.push_back(poly);
+					}
+					for (std::vector<Vector2f*> poly : splitPolygon(bwd)) {
+						list.push_back(poly);
+					}
+
+					break;
+				}
+			}
+		}
+	}
+
+	list.push_back(tmp);
 	return list;
 }
