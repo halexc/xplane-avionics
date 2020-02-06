@@ -65,9 +65,9 @@ void AirportMap::drawTex()
 		glViewport(0, 0, (int)(sizeX * 1024 / scale), (int)(sizeY * 1024 / scale));
 
 		//Draw:
-		drawPavement(Utils::COLOR_GRAY_DARK);
-		//drawTaxiways(15, Utils::COLOR_GRAY);
-		//drawRunways(60, Utils::COLOR_TURQUOISE_BRIGHT);
+		drawPavement(Utils::COLOR_GRAY);
+		drawTaxiways(1, Utils::COLOR_YELLOW);
+		drawRunways(45, Utils::COLOR_TURQUOISE);
 
 		glViewport(oldView[0], oldView[1], oldView[2], oldView[3]);
 
@@ -213,6 +213,8 @@ void AirportMap::drawTaxiways(float w, float color[3], bool drawID)
 			default:
 				break;
 		}
+		Utils::DrawLine(start.E, start.N, end.E, end.N, color, w_t);
+		/*
 		float dx = (end.E - start.E);
 		float dy = (end.N - start.N);
 		float endX = w_t / 2 * dy / sqrtf(dx * dx + dy * dy);
@@ -227,6 +229,7 @@ void AirportMap::drawTaxiways(float w, float color[3], bool drawID)
 		glEnd();
 		Utils::DrawCircleFilled(w_t / 2, start.E, start.N, color, 8);
 		Utils::DrawCircleFilled(w_t / 2, end.E, end.N, color, 8);
+		*/
 	}
 }
 
@@ -237,40 +240,68 @@ void AirportMap::drawGates()
 
 void AirportMap::drawPavement(float color[3])
 {
+	bool debug = false;
 	for (std::vector<Vector2f*> polygon : airport->getPavementPolygons()) {
 		XPLMBindTexture2d(0, 0);
 		glColor3fv(color);
-		glBegin(GL_TRIANGLE_FAN);
-		for (Vector2f * vertex : polygon) {
-			glVertex2f(vertex->x, vertex->y);
+		glBegin(GL_TRIANGLES);
+		for (int i = 0; i < polygon.size(); ++i) {
+			glVertex2f(polygon.at(polygon.size() - 1 - i)->x, polygon.at(polygon.size() - 1 - i)->y);
 		}
 		glEnd();
+		if (debug) {
+			glPointSize(8);
+			glColor3fv(Utils::COLOR_GREEN);
+			glBegin(GL_LINE_LOOP);
+			for (int i = 0; i < polygon.size(); ++i) {
+				glVertex2f(polygon.at(polygon.size() - 1 - i)->x, polygon.at(polygon.size() - 1 - i)->y);
+			}
+			glEnd();
+		}
 	}
+	
 	for (std::vector<Vector2f*> polygon : airport->getHolePolygons()) {
 		glColor3fv(Utils::COLOR_BLACK);
-		glBegin(GL_TRIANGLE_FAN);
-		for (Vector2f * vertex : polygon) {
-			glVertex2f(vertex->x, vertex->y);
+		glBegin(GL_TRIANGLES);
+		for (int i = 0; i < polygon.size(); ++i) {
+			glVertex2f(polygon.at(polygon.size() - 1 - i)->x, polygon.at(polygon.size() - 1 - i)->y);
 		}
 		glEnd();
+		if (debug) {
+			glColor3fv(Utils::COLOR_RED);
+			glBegin(GL_LINE_LOOP);
+			for (int i = 0; i < polygon.size(); ++i) {
+				glVertex2f(polygon.at(polygon.size() - 1 - i)->x, polygon.at(polygon.size() - 1 - i)->y);
+			}
+			glEnd();
+		}
 	}
-	glLineWidth(4.0f);
-	for (std::vector<Vector2f*> polygon : airport->getPavementPolygons_raw()) {
-		//DEBUG:
-		glColor3fv(Utils::COLOR_GREEN);
-		glBegin(GL_LINE_LOOP);
-		for (Vector2f * vertex : polygon) {
-			glVertex2f(vertex->x, vertex->y);
+	if (debug) {
+		glLineWidth(4.0f);
+		for (std::vector<Vector2f*> polygon : airport->getPavementPolygons_raw()) {
+			//DEBUG:
+			glColor3fv(Utils::COLOR_GREEN);
+			glBegin(GL_LINE_LOOP);
+			for (Vector2f * vertex : polygon) {
+				glVertex2f(vertex->x, vertex->y);
+			}
+			glEnd();
+
+			glColor3fv(Utils::COLOR_ORANGE);
+			glBegin(GL_POINTS);
+			for (Vector2f * vertex : polygon) {
+				glVertex2f(vertex->x, vertex->y);
+			}
+			glEnd();
 		}
-		glEnd();
-	}
-	for (std::vector<Vector2f*> polygon : airport->getHolePolygons_raw()) {
-		//DEBUG:
-		glColor3fv(Utils::COLOR_RED);
-		glBegin(GL_LINE_LOOP);
-		for (Vector2f * vertex : polygon) {
-			glVertex2f(vertex->x, vertex->y);
+		for (std::vector<Vector2f*> polygon : airport->getHolePolygons_raw()) {
+			//DEBUG:
+			glColor3fv(Utils::COLOR_RED);
+			glBegin(GL_LINE_LOOP);
+			for (Vector2f * vertex : polygon) {
+				glVertex2f(vertex->x, vertex->y);
+			}
+			glEnd();
 		}
-		glEnd();
 	}
 }

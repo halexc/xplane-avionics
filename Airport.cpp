@@ -5,10 +5,13 @@
 #include <fstream>
 #include <string>
 #include <cmath>
+#include <algorithm>
 
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
+
+static int tris = 0;
 
 Airport::Airport()
 {
@@ -189,6 +192,7 @@ bool Airport::loadAirport(char * path, char * icao)
 												UTMZone = LatLonToUTMXY(lat, lon, UTMZone, pos->x, pos->y);
 
 												pvmtHole_vs.push_back(pos);
+												std::reverse(pvmtHole_vs.begin(), pvmtHole_vs.end());
 
 												pavement_holesRaw.push_back(pvmtHole_vs);
 
@@ -357,6 +361,12 @@ bool Airport::loadAirport(char * path, char * icao)
 	XPLMDebugString(std::to_string(maxX).c_str());
 	XPLMDebugString(", maxY: ");
 	XPLMDebugString(std::to_string(maxY).c_str());
+	XPLMDebugString("\nPavement Tris: ");
+	XPLMDebugString(std::to_string(tris).c_str());
+	XPLMDebugString(".\n"); 
+	XPLMDebugString("Max list elements: ");
+	XPLMDebugString(std::to_string(pavements.max_size()).c_str());
+	XPLMDebugString(".\n");
 	infile.close();
 	return detected;
 }
@@ -428,7 +438,7 @@ bool onLeft(Vector2f * p, Vector2f * plane1, Vector2f * plane2) {
 	float delta = fmodf((b - a) * 180 / M_PI + 360, 360);
 
 	//return true;
-	return delta < 180;
+	return delta >= 180;
 }
 bool isEar(int i, std::vector<Vector2f*> polygon) {
 	//Is there any vertex inside the triangle formed by the ear with its neighbours?
@@ -442,7 +452,7 @@ bool isEar(int i, std::vector<Vector2f*> polygon) {
 			return false;
 		}
 	}
-	XPLMDebugString("Ear found.\n");
+	//XPLMDebugString("Ear found.\n");
 	return true;
 }
 
@@ -452,7 +462,7 @@ std::list<std::vector<Vector2f*>> Airport::splitPolygon(std::vector<Vector2f*> p
 
 	std::list<std::vector<Vector2f*>> list = std::list<std::vector<Vector2f*>>();
 	if (polygon.size() < 3) {
-		XPLMDebugString("Oopsie...\n");
+		//XPLMDebugString("Airport.cpp: Passed polygon with less than 3 vertices.\n");
 		return list; 
 	}
 	
@@ -476,12 +486,13 @@ std::list<std::vector<Vector2f*>> Airport::splitPolygon(std::vector<Vector2f*> p
 		float delta = (phi_v - phi_u) * 180 / M_PI;
 		delta = fmodf(delta + 360, 360);
 
-		if (delta < 180 && isEar((i + 1) % polygon.size(), polygon)) {
+		if (delta > 180 && isEar((i + 1) % polygon.size(), polygon)) {
 			tri.push_back(polygon.at(i));
 			tri.push_back(polygon.at((i + 1) % polygon.size()));
 			tri.push_back(polygon.at((i + 2) % polygon.size()));
 
 			list.push_back(tri);
+			tris++;
 
 			for (int j = 0; j < polygon.size(); ++j) {
 				if ( j == ((i + 1) % polygon.size()) ) continue;
