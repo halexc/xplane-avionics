@@ -75,6 +75,9 @@ public:
 	std::list<Gate*> & getGates();
 	std::list<Runway*> & getRunways();
 	std::list<std::vector<Vector2f*>> & getPavementPolygons();
+	std::list<std::vector<Vector2f*>> & getHolePolygons();
+	std::list<std::vector<Vector2f*>> & getPavementPolygons_raw();
+	std::list<std::vector<Vector2f*>> & getHolePolygons_raw();
 
 private:
 	char * icaoCode = new char[5];
@@ -84,6 +87,10 @@ private:
 	std::list<Runway*> runways;
 
 	std::list<std::vector<Vector2f*>> pavements;
+	std::list<std::vector<Vector2f*>> pavement_holes;
+
+	std::list<std::vector<Vector2f*>> pavementsRaw;
+	std::list<std::vector<Vector2f*>> pavement_holesRaw;
 
 	std::list<std::vector<Vector2f*>> splitPolygon(std::vector<Vector2f*> polygon);
 	

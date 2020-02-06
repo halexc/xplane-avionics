@@ -66,8 +66,8 @@ void AirportMap::drawTex()
 
 		//Draw:
 		drawPavement(Utils::COLOR_GRAY_DARK);
-		drawTaxiways(15, Utils::COLOR_GRAY);
-		drawRunways(60, Utils::COLOR_TURQUOISE_BRIGHT);
+		//drawTaxiways(15, Utils::COLOR_GRAY);
+		//drawRunways(60, Utils::COLOR_TURQUOISE_BRIGHT);
 
 		glViewport(oldView[0], oldView[1], oldView[2], oldView[3]);
 
@@ -241,6 +241,33 @@ void AirportMap::drawPavement(float color[3])
 		XPLMBindTexture2d(0, 0);
 		glColor3fv(color);
 		glBegin(GL_TRIANGLE_FAN);
+		for (Vector2f * vertex : polygon) {
+			glVertex2f(vertex->x, vertex->y);
+		}
+		glEnd();
+	}
+	for (std::vector<Vector2f*> polygon : airport->getHolePolygons()) {
+		glColor3fv(Utils::COLOR_BLACK);
+		glBegin(GL_TRIANGLE_FAN);
+		for (Vector2f * vertex : polygon) {
+			glVertex2f(vertex->x, vertex->y);
+		}
+		glEnd();
+	}
+	glLineWidth(4.0f);
+	for (std::vector<Vector2f*> polygon : airport->getPavementPolygons_raw()) {
+		//DEBUG:
+		glColor3fv(Utils::COLOR_GREEN);
+		glBegin(GL_LINE_LOOP);
+		for (Vector2f * vertex : polygon) {
+			glVertex2f(vertex->x, vertex->y);
+		}
+		glEnd();
+	}
+	for (std::vector<Vector2f*> polygon : airport->getHolePolygons_raw()) {
+		//DEBUG:
+		glColor3fv(Utils::COLOR_RED);
+		glBegin(GL_LINE_LOOP);
 		for (Vector2f * vertex : polygon) {
 			glVertex2f(vertex->x, vertex->y);
 		}
