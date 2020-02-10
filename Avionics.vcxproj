@@ -128,6 +128,7 @@
     <ClInclude Include="Display.h" />
     <ClInclude Include="DisplayElement.h" />
     <ClInclude Include="DisplayElementFBO.h" />
+    <ClInclude Include="earcut.h" />
     <ClInclude Include="NavRose.h" />
     <ClInclude Include="PFD.h" />
     <ClInclude Include="PFDGyro.h" />

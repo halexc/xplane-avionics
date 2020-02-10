@@ -65,7 +65,7 @@ void AirportMap::drawTex()
 		glViewport(0, 0, (int)(sizeX * 1024 / scale), (int)(sizeY * 1024 / scale));
 
 		//Draw:
-		drawPavement(Utils::COLOR_GRAY);
+		drawPavement(Utils::COLOR_GRAY_DARK);
 		drawTaxiways(1, Utils::COLOR_YELLOW);
 		drawRunways(45, Utils::COLOR_TURQUOISE);
 

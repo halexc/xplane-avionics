@@ -7,9 +7,13 @@
 #include <cmath>
 #include <algorithm>
 
+#include <array>
+
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
+
+#include "earcut.h"
 
 static int tris = 0;
 
@@ -108,6 +112,7 @@ bool Airport::loadAirport(char * path, char * icao)
 			//Parse Pavement bounds:
 			if (line.at(1) == '1' && line.at(2) == '0' && line.at(3) == ' ') {
 
+				std::vector<std::vector<Vector2f*>> pvmt_wHoles;
 				std::vector<Vector2f*> pvmt_vs;
 				while (infile.good() && std::getline(infile, line)) {
 
@@ -139,10 +144,13 @@ bool Airport::loadAirport(char * path, char * icao)
 
 							pvmt_vs.push_back(pos);
 							pavementsRaw.push_back(pvmt_vs);
-
+							/*
 							for (std::vector<Vector2f*> polygon : splitPolygon(pvmt_vs)) {
 								pavements.push_back(polygon);
 							}
+							*/
+							pvmt_wHoles.push_back(pvmt_vs);
+
 							pavementParsed:
 							if (std::getline(infile, line)) {
 								if (line.at(0) == '1' && line.at(1) == '1' && (line.at(2) == '1' || line.at(2) == '2')) {
@@ -192,19 +200,27 @@ bool Airport::loadAirport(char * path, char * icao)
 												UTMZone = LatLonToUTMXY(lat, lon, UTMZone, pos->x, pos->y);
 
 												pvmtHole_vs.push_back(pos);
-												std::reverse(pvmtHole_vs.begin(), pvmtHole_vs.end());
+												//std::reverse(pvmtHole_vs.begin(), pvmtHole_vs.end());
 
 												pavement_holesRaw.push_back(pvmtHole_vs);
 
+												pvmt_wHoles.push_back(pvmtHole_vs);
+												/*
 												for (std::vector<Vector2f*> polygon : splitPolygon(pvmtHole_vs)) {
 													pavement_holes.push_back(polygon);
 												}
+												*/
+
 												goto pavementParsed;
 											}
 										}
 									}
 								}
+								for (std::vector<Vector2f*> polygon : splitPolygonEarCutHoles(pvmt_wHoles)) {
+									pavements.push_back(polygon);
+								}
 							}
+
 							goto beginLoop;
 						}
 					}
@@ -579,4 +595,33 @@ std::list<std::vector<Vector2f*>> Airport::splitPolygon(std::vector<Vector2f*> p
 	*/
 
 	return list;
+}
+
+std::list<std::vector<Vector2f*>> Airport::splitPolygonEarCutHoles(std::vector<std::vector<Vector2f*>> polygon)
+{
+	std::list<std::vector<Vector2f*>> res;
+
+	using Coord = float;
+	using N = uint32_t;
+	using Point = std::array<Coord, 2>;
+	std::vector<std::vector<Point>> poly;
+	std::vector<Vector2f*> points;
+	for (std::vector<Vector2f*> polyline : polygon) {
+		std::vector<Point> line;
+		for (Vector2f * point : polyline) {
+			line.push_back({ point->x, point->y });
+			points.push_back(point);
+		}
+		poly.push_back(line);
+	}
+	std::vector<N> indices = mapbox::earcut<N>(poly);
+	for (N i = 0; i <= indices.size() - 3; i += 3) {
+		std::vector<Vector2f*> tri = std::vector<Vector2f*>();
+		tri.push_back(points.at(indices.at(i)));
+		tri.push_back(points.at(indices.at(i + 1)));
+		tri.push_back(points.at(indices.at(i + 2)));
+		res.push_back(tri);
+	}
+
+	return res;
 }

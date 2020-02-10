@@ -228,10 +228,12 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 	
 	//XPLMDebugString("main.cpp: Loading airport data.\n");
 	strcpy(tmpPath, resPath);
+	//strcat(tmpPath, "ESGG_aptdat.txt");
 	strcat(tmpPath, "EDDL_aptdat.txt");
+	//strcat(tmpPath, "EDDF.dat");
 	Airport * apt = new Airport();
 	if (apt->loadAirport(tmpPath, "EDDL")) {
-		//XPLMDebugString("main.cpp: Successfully loaded Airport data for EDDL.\n");
+		XPLMDebugString("main.cpp: Successfully loaded Airport data for EDDL.\n");
 	}
 
 	AirportMap * map = new AirportMap();

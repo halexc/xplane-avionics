@@ -90,6 +90,9 @@
     <ClInclude Include="NavRose.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="earcut.h">
+      <Filter>Headerdateien\HelperClasses</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Display.cpp">

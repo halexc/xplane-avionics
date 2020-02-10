@@ -93,6 +93,7 @@ private:
 	std::list<std::vector<Vector2f*>> pavement_holesRaw;
 
 	std::list<std::vector<Vector2f*>> splitPolygon(std::vector<Vector2f*> polygon);
+	std::list<std::vector<Vector2f*>> splitPolygonEarCutHoles(std::vector<std::vector<Vector2f*>>);
 	
 	int UTMZone = 0;
 	float minX = FLT_MAX;
