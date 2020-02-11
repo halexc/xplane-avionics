@@ -97,7 +97,7 @@
       <Filter>Headerdateien\DisplayElements\BasicElements</Filter>
     </ClInclude>
     <ClInclude Include="TextSimpleData.h">
-      <Filter>Headerdateien</Filter>
+      <Filter>Headerdateien\DisplayElements\BasicElements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -159,7 +159,7 @@
       <Filter>Quelldateien\DisplayElements\BasicElements</Filter>
     </ClCompile>
     <ClCompile Include="TextSimpleData.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Quelldateien\DisplayElements\BasicElements</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

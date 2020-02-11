@@ -27,7 +27,8 @@
 
 static int render(XPLMDrawingPhase inPhase, int inIsBefore, void* inRefcon);
 static Display * displays[4];
-static Container * pages[10];
+static Container * pagesPilot[10];
+static Container * pagesCopilot[10];
 
 std::map<GLchar, Character> * font_AirbusMCDUa = new std::map<GLchar, Character>;
 std::map<GLchar, Character> * font_AirbusPFD = new std::map<GLchar, Character>;
@@ -340,9 +341,9 @@ void setupContainer() {
 	//Nav Page (index 0):
 	char* tmpPath = new char[255];
 
-	pages[0] = new Container();
-	pages[0]->setBounds(0, 0, 384, 564);
-	displays[1]->addElement(pages[0]);
+	pagesPilot[0] = new Container();
+	pagesPilot[0]->setBounds(0, 0, 384, 564);
+	displays[1]->addElement(pagesPilot[0]);
 
 	//XPLMDebugString("main.cpp: Loading airport data.\n");
 	strcpy(tmpPath, resPath);
@@ -361,25 +362,43 @@ void setupContainer() {
 	map->setScale(1852);
 	map->setDataSource_hdg(&(hdg_data[0]));
 	map->setDataSource_GPS(&(gps_data_lat[0]), &(gps_data_lon[0]));
-	pages[0]->addElement(map);
+	pagesPilot[0]->addElement(map);
 
 	NavRose * navRoseND = new NavRose();
 	navRoseND->setHdgData(&(hdg_data[0]));
 	navRoseND->setBounds(0, 64, 384, 384);
 	navRoseND->setFont(font_AirbusPFD);
-	pages[0]->addElement(navRoseND);
+	pagesPilot[0]->addElement(navRoseND);
+
+	pagesCopilot[0] = new Container();
+	pagesCopilot[0]->setBounds(384, 0, 384, 564);
+	displays[3]->addElement(pagesCopilot[0]);
+
+	AirportMap * mapCo = new AirportMap();
+	mapCo->setAirport(apt);
+	mapCo->setBounds(0, 0, 384, 512);
+	mapCo->setScale(1852);
+	mapCo->setDataSource_hdg(&(hdg_data[1]));
+	mapCo->setDataSource_GPS(&(gps_data_lat[0]), &(gps_data_lon[0]));
+	pagesCopilot[0]->addElement(mapCo);
+
+	NavRose * navRoseND_FO = new NavRose();
+	navRoseND_FO->setHdgData(&(hdg_data[1]));
+	navRoseND_FO->setBounds(0, 64, 384, 384);
+	navRoseND_FO->setFont(font_AirbusPFD);
+	pagesCopilot[0]->addElement(navRoseND_FO);
 
 	//General Info Page (index 1):
-	pages[1] = new Container();
-	pages[1]->setBounds(384, 0, 384, 564);
-	displays[1]->addElement(pages[1]);
+	pagesPilot[1] = new Container();
+	pagesPilot[1]->setBounds(384, 0, 384, 564);
+	displays[1]->addElement(pagesPilot[1]);
 
 	//Engine Stats:
 	Rect * rectEngine = new Rect();
 	rectEngine->setBounds(0, 282, 192, 282);
 	rectEngine->setColor3fv(Utils::COLOR_BLACK);
 	rectEngine->setLineWidth(2);
-	pages[1]->addElement(rectEngine);
+	pagesPilot[1]->addElement(rectEngine);
 
 	TextSimple * textN1 = new TextSimple(2);
 	textN1->setText("N1");
@@ -387,7 +406,7 @@ void setupContainer() {
 	textN1->setFont(font_AirbusPFD);
 	textN1->setSize(0.3f);
 	textN1->setPosition(96 - textN1->getTextWidth() / 2, 474);
-	pages[1]->addElement(textN1);
+	pagesPilot[1]->addElement(textN1);
 
 	TextSimple * textEGT = new TextSimple(3);
 	textEGT->setText("EGT");
@@ -395,7 +414,7 @@ void setupContainer() {
 	textEGT->setFont(font_AirbusPFD);
 	textEGT->setSize(0.3f);
 	textEGT->setPosition(96 - textEGT->getTextWidth() / 2, 398);
-	pages[1]->addElement(textEGT);
+	pagesPilot[1]->addElement(textEGT);
 
 	CircularProgressGauge * gauge_n1_1 = new CircularProgressGauge();
 	gauge_n1_1->setBounds(6, 466, 84, 84);
@@ -404,7 +423,7 @@ void setupContainer() {
 	gauge_n1_1->setColorExceed(Utils::COLOR_ORANGE);
 	gauge_n1_1->setColorCircle(Utils::COLOR_GRAY_DARK);
 	gauge_n1_1->setFont(font_AirbusPFD);
-	pages[1]->addElement(gauge_n1_1);
+	pagesPilot[1]->addElement(gauge_n1_1);
 
 	CircularProgressGauge * gauge_n1_2 = new CircularProgressGauge();
 	gauge_n1_2->setBounds(102, 466, 84, 84);
@@ -413,7 +432,7 @@ void setupContainer() {
 	gauge_n1_2->setColorCircle(Utils::COLOR_GRAY_DARK);
 	gauge_n1_2->setMaximum(100);
 	gauge_n1_2->setFont(font_AirbusPFD);
-	pages[1]->addElement(gauge_n1_2);
+	pagesPilot[1]->addElement(gauge_n1_2);
 
 	CircularProgressGauge * gauge_egt_1 = new CircularProgressGauge();
 	gauge_egt_1->setBounds(6, 390, 84, 84);
@@ -423,7 +442,7 @@ void setupContainer() {
 	gauge_egt_1->configureMarker(-(float)M_PI * 1.125f, 0, Utils::COLOR_YELLOW);
 	gauge_egt_1->setFont(font_AirbusPFD);
 	gauge_egt_1->setNumberFormat(4, 0);
-	pages[1]->addElement(gauge_egt_1);
+	pagesPilot[1]->addElement(gauge_egt_1);
 
 	CircularProgressGauge * gauge_egt_2 = new CircularProgressGauge();
 	gauge_egt_2->setBounds(102, 390, 84, 84);
@@ -433,7 +452,7 @@ void setupContainer() {
 	gauge_egt_2->configureMarker(-(float)M_PI * 1.125f, 0, Utils::COLOR_YELLOW);
 	gauge_egt_2->setFont(font_AirbusPFD);
 	gauge_egt_2->setNumberFormat(4, 0);
-	pages[1]->addElement(gauge_egt_2);
+	pagesPilot[1]->addElement(gauge_egt_2);
 
 	TextSimple * textN2 = new TextSimple();
 	textN2->setText("N2");
@@ -441,7 +460,7 @@ void setupContainer() {
 	textN2->setFont(font_AirbusPFD);
 	textN2->setSize(0.3f);
 	textN2->setPosition(96 - textN2->getTextWidth() / 2, 370);
-	pages[1]->addElement(textN2);
+	pagesPilot[1]->addElement(textN2);
 
 	TextSimpleData * textN2_1 = new TextSimpleData();
 	textN2_1->setPosition(32, 370);
@@ -450,7 +469,7 @@ void setupContainer() {
 	textN2_1->setSize(0.375f);
 	textN2_1->setDecimals(1);
 	textN2_1->setFont(font_AirbusPFD);
-	pages[1]->addElement(textN2_1);
+	pagesPilot[1]->addElement(textN2_1);
 
 	TextSimpleData * textN2_2 = new TextSimpleData();
 	textN2_2->setPosition(160, 370);
@@ -459,7 +478,7 @@ void setupContainer() {
 	textN2_2->setSize(0.375f);
 	textN2_2->setDecimals(1);
 	textN2_2->setFont(font_AirbusPFD);
-	pages[1]->addElement(textN2_2);
+	pagesPilot[1]->addElement(textN2_2);
 
 	TextSimple * textFF = new TextSimple();
 	textFF->setText("FF (KPH)");
@@ -467,7 +486,7 @@ void setupContainer() {
 	textFF->setFont(font_AirbusPFD);
 	textFF->setSize(0.3f);
 	textFF->setPosition(96 - textFF->getTextWidth() / 2, 353);
-	pages[1]->addElement(textFF);
+	pagesPilot[1]->addElement(textFF);
 
 	TextSimpleData * textFF_1 = new TextSimpleData();
 	textFF_1->setPosition(32, 353);
@@ -476,7 +495,7 @@ void setupContainer() {
 	textFF_1->setSize(0.375f);
 	textFF_1->setDecimals(0);
 	textFF_1->setFont(font_AirbusPFD);
-	pages[1]->addElement(textFF_1);
+	pagesPilot[1]->addElement(textFF_1);
 
 	TextSimpleData * textFF_2 = new TextSimpleData();
 	textFF_2->setPosition(160, 353);
@@ -485,7 +504,7 @@ void setupContainer() {
 	textFF_2->setSize(0.375f);
 	textFF_2->setDecimals(0);
 	textFF_2->setFont(font_AirbusPFD);
-	pages[1]->addElement(textFF_2);
+	pagesPilot[1]->addElement(textFF_2);
 
 	TextSimple * textOT = new TextSimple();
 	textOT->setText("OIL TEMP");
@@ -493,7 +512,7 @@ void setupContainer() {
 	textOT->setFont(font_AirbusPFD);
 	textOT->setSize(0.3f);
 	textOT->setPosition(96 - textOT->getTextWidth() / 2, 336);
-	pages[1]->addElement(textOT);
+	pagesPilot[1]->addElement(textOT);
 
 	TextSimpleData * textOT_1 = new TextSimpleData();
 	textOT_1->setPosition(32, 336);
@@ -502,7 +521,7 @@ void setupContainer() {
 	textOT_1->setSize(0.375f);
 	textOT_1->setDecimals(0);
 	textOT_1->setFont(font_AirbusPFD);
-	pages[1]->addElement(textOT_1);
+	pagesPilot[1]->addElement(textOT_1);
 
 	TextSimpleData * textOT_2 = new TextSimpleData();
 	textOT_2->setPosition(160, 336);
@@ -511,7 +530,7 @@ void setupContainer() {
 	textOT_2->setSize(0.375f);
 	textOT_2->setDecimals(0);
 	textOT_2->setFont(font_AirbusPFD);
-	pages[1]->addElement(textOT_2);
+	pagesPilot[1]->addElement(textOT_2);
 
 	TextSimple * textOP = new TextSimple();
 	textOP->setText("OIL PRESS");
@@ -519,7 +538,7 @@ void setupContainer() {
 	textOP->setFont(font_AirbusPFD);
 	textOP->setSize(0.3f);
 	textOP->setPosition(96 - textOP->getTextWidth() / 2, 321);
-	pages[1]->addElement(textOP);
+	pagesPilot[1]->addElement(textOP);
 
 	TextSimpleData * textOP_1 = new TextSimpleData();
 	textOP_1->setPosition(32, 321);
@@ -528,7 +547,7 @@ void setupContainer() {
 	textOP_1->setSize(0.375f);
 	textOP_1->setDecimals(0);
 	textOP_1->setFont(font_AirbusPFD);
-	pages[1]->addElement(textOP_1);
+	pagesPilot[1]->addElement(textOP_1);
 
 	TextSimpleData * textOP_2 = new TextSimpleData();
 	textOP_2->setPosition(160, 321);
@@ -537,14 +556,14 @@ void setupContainer() {
 	textOP_2->setSize(0.375f);
 	textOP_2->setDecimals(0);
 	textOP_2->setFont(font_AirbusPFD);
-	pages[1]->addElement(textOP_2);
+	pagesPilot[1]->addElement(textOP_2);
 
 	//Fuel info:
 	Rect * rectFuel = new Rect();
 	rectFuel->setBounds(0, 218, 192, 64);
 	rectFuel->setColor3fv(Utils::COLOR_BLACK);
 	rectFuel->setLineWidth(2);
-	pages[1]->addElement(rectFuel);
+	pagesPilot[1]->addElement(rectFuel);
 
 	TextSimple * textFuel1 = new TextSimple();
 	textFuel1->setText("TOTAL FUEL");
@@ -552,7 +571,7 @@ void setupContainer() {
 	textFuel1->setFont(font_AirbusPFD);
 	textFuel1->setSize(0.425f);
 	textFuel1->setPosition(14, 260);
-	pages[1]->addElement(textFuel1);
+	pagesPilot[1]->addElement(textFuel1);
 
 	TextSimple * textFuel2 = new TextSimple();
 	textFuel2->setText("(KG)");
@@ -560,13 +579,13 @@ void setupContainer() {
 	textFuel2->setFont(font_AirbusPFD);
 	textFuel2->setSize(0.3f);
 	textFuel2->setPosition(100, 260);
-	pages[1]->addElement(textFuel2);
+	pagesPilot[1]->addElement(textFuel2);
 
 	Rect * rectTotalFuel = new Rect();
 	rectTotalFuel->setBounds(128, 256, 58, 18);
 	rectTotalFuel->setColor3fv(Utils::COLOR_BLACK);
 	rectTotalFuel->setLineWidth(2);
-	pages[1]->addElement(rectTotalFuel);
+	pagesPilot[1]->addElement(rectTotalFuel);
 
 	TextSimpleData * textFuel_T = new TextSimpleData();
 	textFuel_T->setPosition(184, 260);
@@ -575,7 +594,7 @@ void setupContainer() {
 	textFuel_T->setSize(0.425f);
 	textFuel_T->setDecimals(0);
 	textFuel_T->setFont(font_AirbusPFD);
-	pages[1]->addElement(textFuel_T);
+	pagesPilot[1]->addElement(textFuel_T);
 
 	TextSimpleData * textFuel_L = new TextSimpleData();
 	textFuel_L->setPosition(56, 232);
@@ -584,7 +603,7 @@ void setupContainer() {
 	textFuel_L->setSize(0.425f);
 	textFuel_L->setDecimals(0);
 	textFuel_L->setFont(font_AirbusPFD);
-	pages[1]->addElement(textFuel_L);
+	pagesPilot[1]->addElement(textFuel_L);
 
 	TextSimpleData * textFuel_C = new TextSimpleData();
 	textFuel_C->setPosition(116, 232);
@@ -593,7 +612,7 @@ void setupContainer() {
 	textFuel_C->setSize(0.425f);
 	textFuel_C->setDecimals(0);
 	textFuel_C->setFont(font_AirbusPFD);
-	pages[1]->addElement(textFuel_C);
+	pagesPilot[1]->addElement(textFuel_C);
 
 	TextSimpleData * textFuel_R = new TextSimpleData();
 	textFuel_R->setPosition(176, 232);
@@ -602,32 +621,42 @@ void setupContainer() {
 	textFuel_R->setSize(0.425f);
 	textFuel_R->setDecimals(0);
 	textFuel_R->setFont(font_AirbusPFD);
-	pages[1]->addElement(textFuel_R);
+	pagesPilot[1]->addElement(textFuel_R);
 
 	//Warnings and status:
 	Rect * rectStatus = new Rect();
 	rectStatus->setBounds(192, 218, 192, 346);
 	rectStatus->setColor3fv(Utils::COLOR_BLACK);
 	rectStatus->setLineWidth(2);
-	pages[1]->addElement(rectStatus);
+	pagesPilot[1]->addElement(rectStatus);
 
 	//Cabin status:
 	Rect * rectCabin = new Rect();
 	rectCabin->setBounds(0, 108, 192, 110);
 	rectCabin->setColor3fv(Utils::COLOR_BLACK);
 	rectCabin->setLineWidth(2);
-	pages[1]->addElement(rectCabin);
+	pagesPilot[1]->addElement(rectCabin);
 
 	//Trim status:
 	Rect * rectTrim = new Rect();
 	rectTrim->setBounds(192, 108, 192, 110);
 	rectTrim->setColor3fv(Utils::COLOR_BLACK);
 	rectTrim->setLineWidth(2);
-	pages[1]->addElement(rectTrim);
+	pagesPilot[1]->addElement(rectTrim);
 
 	//FLT CTRL (index 2):
-	pages[2] = new Container();
-	pages[2]->setBounds(0, 0, 384, 564);
+	pagesPilot[2] = new Container();
+	pagesPilot[2]->setBounds(0, 0, 384, 564);
+	displays[3]->addElement(pagesPilot[2]);
 
-
+	Rect * rectAircraft = new Rect();
+	strcpy(tmpPath, resPath);
+	strcat(tmpPath, "Aircraft.png");
+	GLint tex;
+	Utils::LoadTexturePNG(&tex, tmpPath);
+	rectAircraft->setTexture(tex);
+	rectAircraft->setBounds(0, 96, 384, 384);
+	rectAircraft->setLineWidth(0);
+	rectAircraft->setTextureCoordOffset(1);
+	pagesPilot[2]->addElement(rectAircraft);
 }

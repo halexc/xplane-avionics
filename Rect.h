@@ -13,6 +13,9 @@ public:
 	void update();
 
 	void setTexture(int texID);
+	void setTextureCoordOffset(int i);
+
+
 	void setColor3f(float r, float g, float b);
 	void setColor3fv(float color[3]);
 	void setColor4f(float r, float g, float b, float a);
@@ -25,6 +28,8 @@ public:
 protected:
 	int texID = 0;
 	float color[4] = { 1, 1, 1, 1 };
+
+	int offset = 0;
 
 	float lineWidth = 0;
 	float lineColor[3] = { 1, 1, 1 };
