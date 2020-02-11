@@ -23,6 +23,9 @@ public:
 
 	void setColor(float c[3]);
 
+	bool alignCenter = false;
+	bool alignRight = false;
+
 private:
 	std::map<GLchar, Character> * font;
 	char * label = new char[255];

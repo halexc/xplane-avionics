@@ -17,7 +17,13 @@ TextSimple::~TextSimple()
 
 void TextSimple::draw()
 {
-	Utils::RenderText(label, *font, x, y, size, color);
+	if (alignCenter) {
+		Utils::RenderText(label, *font, x - Utils::GetTextWidth(label, *font, size) / 2, y, size, color);
+	}
+	else if (alignRight) {
+		Utils::RenderText(label, *font, x - Utils::GetTextWidth(label, *font, size), y, size, color);
+	}
+	else Utils::RenderText(label, *font, x, y, size, color);
 }
 
 void TextSimple::update()

@@ -14,6 +14,7 @@ public:
 
 	void setMaximum(float max);
 	void setTextColor(float c[3]);
+	void setColorCircle(float c[3]);
 	void setColorExceed(float c[3]);
 	void setDataSource(float * src);
 	void configureMarker(float angle, float openness, float c[3]);

@@ -20,18 +20,18 @@ void CircularProgressGauge::draw()
 	}
 	float r = max(width * ((1 - 0.125f) / 2), width / 2 - 10);
 	if (p <= 1) {
-		Utils::DrawPartCircleFilled(r, x + width / 2, y + height / 2, p * markerAngle, 0, color_circle);
+		Utils::DrawPartCircleFilled(0.9325f * r, x + width / 2, y + height / 2, p * markerAngle, 0, color_circle);
 	}
 	else {
-		Utils::DrawPartCircleFilled(r, x + width / 2, y + height / 2, min(p, (float) (M_PI * 1.125f / abs(markerAngle))) * markerAngle, 0, color_exceed);
+		Utils::DrawPartCircleFilled(0.9325f * r, x + width / 2, y + height / 2, min(p, (float) (M_PI * 1.125f / abs(markerAngle))) * markerAngle, 0, color_exceed);
 	}
 	Utils::DrawLine(x + width / 2, y + height / 2, x + width / 2 + r * cosf(min(p, (float)(M_PI * 1.125f / abs(markerAngle))) * markerAngle),
 										y + height / 2 + r * sinf(min(p, (float)(M_PI * 1.125f / abs(markerAngle))) * markerAngle), Utils::COLOR_WHITE, min(8, max(3, width / 40)));
-	Utils::DrawLine(x + width / 2, y + height / 2, x + width / 2 + r, y + height / 2, Utils::COLOR_WHITE, min(8, max(3, width / 40)));
+	//Utils::DrawLine(x + width / 2, y + height / 2, x + width / 2 + r, y + height / 2, Utils::COLOR_WHITE, min(8, max(3, width / 40)));
 
 	//Draw scale (Circle + Max-Indicator):
 		//Circle
-	Utils::DrawPartCircle(r, x + width / 2, y + height / 2, -(float)M_PI * 1.125f, 0, Utils::COLOR_WHITE, min(8, max(3, width / 40)));
+	Utils::DrawPartCircle(r, x + width / 2, y + height / 2, -(float)M_PI * 1.125f, 0, Utils::COLOR_WHITE, min(8, max(3, width / 60)));
 		//Indicator
 	float xs[3] = { x + width / 2 + width / 2 * cosf(markerAngle),
 					x + width / 2 + (width / 2 - min(width / 2 * 0.25f, 20)) * cosf(markerAngle),
@@ -47,7 +47,7 @@ void CircularProgressGauge::draw()
 		float textScale = (0.5f) * width / (max(3, decimalsPre + decimalsPost + 1) * font->at('0').advance / 64.0f);
 		float h = font->at('0').height * textScale;
 		float xs2[5] = { x + 0.5125f * width,	x + width,				x + width,						x + 0.5125f * width,			x + 0.5125f * width, };
-		float ys2[5] = { y + 0.5125f * height,	y + 0.5125f * height,	y + 0.5125f * height + 2 * h,	y + 0.5125f * height + 2 * h,	y + 0.5125f * height };
+		float ys2[5] = { y + 0.525f * height,	y + 0.525f * height,	y + 0.525f * height + 2 * h,	y + 0.525f * height + 2 * h,	y + 0.525f * height };
 		Utils::DrawLinesConnected(xs2, ys2, 5, Utils::COLOR_WHITE, min(8, max(3, width / 40)));
 
 		int pre = (int)(*data);
@@ -83,6 +83,13 @@ void CircularProgressGauge::setTextColor(float c[3])
 	color_text[0] = c[0];
 	color_text[1] = c[1];
 	color_text[2] = c[2];
+}
+
+void CircularProgressGauge::setColorCircle(float c[3])
+{
+	color_circle[0] = c[0];
+	color_circle[1] = c[1];
+	color_circle[2] = c[2];
 }
 
 void CircularProgressGauge::setColorExceed(float c[3])

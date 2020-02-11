@@ -87,11 +87,17 @@
     <ClInclude Include="AirportMap.h">
       <Filter>Headerdateien\DisplayElements\ComplexElements</Filter>
     </ClInclude>
-    <ClInclude Include="NavRose.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="earcut.h">
       <Filter>Headerdateien\HelperClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="NavRose.h">
+      <Filter>Headerdateien\DisplayElements\ComplexElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>Headerdateien\DisplayElements\BasicElements</Filter>
+    </ClInclude>
+    <ClInclude Include="TextSimpleData.h">
+      <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +153,12 @@
       <Filter>Quelldateien\DisplayElements\ComplexElements</Filter>
     </ClCompile>
     <ClCompile Include="NavRose.cpp">
+      <Filter>Quelldateien\DisplayElements\ComplexElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Rect.cpp">
+      <Filter>Quelldateien\DisplayElements\BasicElements</Filter>
+    </ClCompile>
+    <ClCompile Include="TextSimpleData.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

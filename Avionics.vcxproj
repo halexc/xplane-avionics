@@ -134,8 +134,10 @@
     <ClInclude Include="PFDGyro.h" />
     <ClInclude Include="PFDIndicatorAltitude.h" />
     <ClInclude Include="PFDIndicatorCAS.h" />
+    <ClInclude Include="Rect.h" />
     <ClInclude Include="TextBox.h" />
     <ClInclude Include="TextSimple.h" />
+    <ClInclude Include="TextSimpleData.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="UTM.h" />
   </ItemGroup>
@@ -154,8 +156,10 @@
     <ClCompile Include="PFDGyro.cpp" />
     <ClCompile Include="PFDIndicatorAltitude.cpp" />
     <ClCompile Include="PFDIndicatorCAS.cpp" />
+    <ClCompile Include="Rect.cpp" />
     <ClCompile Include="TextBox.cpp" />
     <ClCompile Include="TextSimple.cpp" />
+    <ClCompile Include="TextSimpleData.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="UTM.cpp" />
   </ItemGroup>
