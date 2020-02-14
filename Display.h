@@ -26,6 +26,8 @@ private:
 
 	float texX, texY, texW, texH;
 	int resX, resY;
+	
+	bool initialized = false;
 
 	GLint oldFramebuffer;
 	GLuint framebuffer;
