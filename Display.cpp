@@ -20,7 +20,6 @@ Display::Display(float x, float y, float width, float height)
 	texH = height;
 	this->resX = (int) (width * 2048);
 	this->resY = (int)(height * 2048);
-	init();
 }
 
 Display::Display(float x, float y, float width, float height, int pixelsX, int pixelsY)
@@ -31,12 +30,27 @@ Display::Display(float x, float y, float width, float height, int pixelsX, int p
 	texH = height;
 	this->resX = pixelsX;
 	this->resY = pixelsY;
-	init();
 }
 
 
 Display::~Display()
 {
+}
+
+void Display::setBounds(float x, float y, float width, float height)
+{
+	texX = x;
+	texY = y;
+	texW = width;
+	texH = height;
+}
+
+void Display::setResolution(int pixelsX, int pixelsY)
+{
+	this->resX = pixelsX;
+	this->resY = pixelsY;
+	
+	initialized = false;
 }
 
 void Display::addElement(DisplayElement * de)
@@ -46,6 +60,10 @@ void Display::addElement(DisplayElement * de)
 
 void Display::draw()
 {
+	if(!initialized)
+	{
+		init();
+	}
 	for (DisplayElement * de : elements)
 	{
 		if (DisplayElementFBO * deFBO = dynamic_cast<DisplayElementFBO *>(de)) {
@@ -98,7 +116,9 @@ void Display::update()
 }
 
 void Display::init() {
+	initialized = true;
 	if (!Utils::InitFBO(&framebuffer, &texture, resX, resY, GL_RGB)) {
 		XPLMDebugString("Display.cpp: Error when setting up framebuffer.");
+		initialized = false;		
 	}
 }
