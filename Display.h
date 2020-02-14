@@ -15,6 +15,8 @@ public:
 	Display(float x, float y, float width, float height, int pixelsX, int pixelsY);
 	~Display();
 
+	void setBounds(float x, float y, float width, float height);
+	void setResolution(int pixelsX, int pixelsY);
 	void addElement(DisplayElement* de);
 
 	void draw();
