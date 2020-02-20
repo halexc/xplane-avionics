@@ -19,14 +19,16 @@ DisplayElement::~DisplayElement()
 
 void DisplayElement::update()
 {
+	if (func_update) func_update();
 }
 
 void DisplayElement::draw()
 {
 }
 
-void DisplayElement::onClick(int mouseX, int mouseY)
+void DisplayElement::setUpdateFunction(void(*f)())
 {
+	func_update = f;
 }
 
 void DisplayElement::setBounds(int x, int y, int width, int height)

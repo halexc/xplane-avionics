@@ -10,7 +10,6 @@ public:
 	~NavRose();
 
 	void draw();
-	void update();
 
 	void setHdgData(float * hdg_source);
 	void setFont(std::map<GLchar, Character> * font);

@@ -60,6 +60,7 @@ void PFD::drawTex()
 
 void PFD::update()
 {
+	if (func_update) func_update();
 	if (gyro) gyro->update();
 	if (altIndicator) altIndicator->update();
 	if (speedIndicator) speedIndicator->update();

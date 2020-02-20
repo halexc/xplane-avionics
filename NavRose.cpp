@@ -86,10 +86,6 @@ void NavRose::draw()
 	Utils::DrawLine(x + 0.5175f * width, y + 0.46f * height, x + 0.5f * width, y + 0.48f * height, Utils::COLOR_FUCHSIA, 0.0175f * radius);
 }
 
-void NavRose::update()
-{
-}
-
 void NavRose::setHdgData(float * hdg_source)
 {
 	hdg_data = hdg_source;

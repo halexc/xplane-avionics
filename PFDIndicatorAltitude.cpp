@@ -12,11 +12,6 @@ PFDIndicatorAltitude::~PFDIndicatorAltitude()
 {
 }
 
-void PFDIndicatorAltitude::update()
-{
-}
-
-
 void PFDIndicatorAltitude::setDataSources(float * alt, float * radioAlt, float * vs)
 {
 	data_altitude = alt;

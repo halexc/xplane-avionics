@@ -10,7 +10,6 @@ public:
 	~CircularProgressGauge();
 
 	void draw();
-	void update();
 
 	void setMaximum(float max);
 	void setTextColor(float c[3]);

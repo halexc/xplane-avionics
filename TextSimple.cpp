@@ -26,11 +26,6 @@ void TextSimple::draw()
 	else Utils::RenderText(label, *font, x, y, size, color);
 }
 
-void TextSimple::update()
-{
-
-}
-
 void TextSimple::setPosition(float x, float y)
 {
 	this->x = x;

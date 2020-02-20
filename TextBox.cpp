@@ -15,9 +15,6 @@ TextBox::~TextBox()
 {
 }
 
-void TextBox::update()
-{
-}
 
 void TextBox::drawTex()
 {

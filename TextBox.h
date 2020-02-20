@@ -10,7 +10,6 @@ public:
 	TextBox(int n);
 	~TextBox();
 	
-	void update();
 	void drawTex();
 
 	void setFont(std::map<GLchar, Character> * f);

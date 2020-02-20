@@ -11,7 +11,6 @@ public:
 	~TextSimple();
 
 	void draw();
-	void update();
 
 	void setPosition(float x, float y);
 

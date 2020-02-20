@@ -23,7 +23,6 @@ struct Character {
 class Utils
 {
 public:
-
 	//Bright red color: R=1, G=0, B=0
 	static float COLOR_RED_BRIGHT[3];
 
@@ -243,7 +242,7 @@ public:
 	*/
 	static void DrawPartCircle(float r, float x, float y, float startAngle, float endAngle, float color[3], float width = 1, int segments = 32, bool smooth = true);
 
-	/**	void DrawCircle(float r, float x, float y, float color[3], float width = 1, int segments = 32, bool smooth = true)
+	/**	void DrawCircleFilled(float r, float x, float y, float color[3], float width = 1, int segments = 32, bool smooth = true)
 	*
 	*	Parameters:
 	*	- float r: Cirlce radius
@@ -258,7 +257,7 @@ public:
 	*/
 	static void DrawCircleFilled(float r, float x, float y, float color[3], int segments = 32);
 
-	/**	void DrawPartCircle(float r, float x, float y, float startAngle, float endAngle, float color[3], float width = 1, int segments = 32, bool smooth = true)
+	/**	void DrawPartCircleFilled(float r, float x, float y, float startAngle, float endAngle, float color[3], float width = 1, int segments = 32, bool smooth = true)
 	*
 	*	Parameters:
 	*	- float r: Cirlce radius
@@ -317,7 +316,7 @@ public:
 	*/
 	static void DrawLines(float *xs, float *ys, int n, float color[3] = COLOR_WHITE, float width = 1, bool smooth = true);
 
-	/** void DrawLine(float x1, float y1, float x2, float y2, float color[3] = COLOR_WHITE, float width = 1, bool smooth = true)
+	/** void DrawLinesConnected(float * xs, float * ys, int n, float color[3] = COLOR_WHITE, float width = 1, bool smooth = true)
 	*
 	*	Parameters:
 	*	- float xs: x coordinates (in OpenGL space)

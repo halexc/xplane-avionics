@@ -10,7 +10,6 @@ public:
 
 	void draw();
 	virtual void drawTex();
-	virtual void update();
 
 	void setBounds(int x, int y, int width, int height);
 

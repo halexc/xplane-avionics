@@ -69,10 +69,6 @@ void CircularProgressGauge::draw()
 	}
 }
 
-void CircularProgressGauge::update()
-{
-}
-
 void CircularProgressGauge::setMaximum(float max)
 {
 	this->max = max;

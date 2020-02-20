@@ -10,7 +10,6 @@ public:
 	~AirportMap();
 
 	void drawTex();
-	void update();
 
 	/** void setScale(float scale)
 	*

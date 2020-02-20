@@ -32,10 +32,6 @@ void DisplayElementFBO::drawTex()
 	}
 }
 
-void DisplayElementFBO::update()
-{
-}
-
 void DisplayElementFBO::setBounds(int x, int y, int width, int height)
 {
 	this->x = x;

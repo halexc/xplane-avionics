@@ -131,10 +131,6 @@ void AirportMap::drawTex()
 	glBindFramebuffer(GL_FRAMEBUFFER, fboOld);
 }
 
-void AirportMap::update()
-{
-}
-
 void AirportMap::setScale(float scale)
 {
 	valid = false;

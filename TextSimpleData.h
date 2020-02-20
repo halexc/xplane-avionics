@@ -9,7 +9,6 @@ public:
 	~TextSimpleData();
 
 	void draw();
-	void update();
 
 	void setDataSource(float * src);
 

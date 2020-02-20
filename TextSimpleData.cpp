@@ -30,10 +30,6 @@ void TextSimpleData::draw()
 	TextSimple::draw();
 }
 
-void TextSimpleData::update()
-{
-}
-
 void TextSimpleData::setDataSource(float * src)
 {
 	data = src;

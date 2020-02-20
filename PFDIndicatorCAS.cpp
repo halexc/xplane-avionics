@@ -12,10 +12,6 @@ PFDIndicatorCAS::~PFDIndicatorCAS()
 {
 }
 
-void PFDIndicatorCAS::update()
-{
-}
-
 void PFDIndicatorCAS::setDataSources(float * cas, float * acceleration)
 {
 	data_cas = cas;

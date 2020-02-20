@@ -46,10 +46,6 @@ void Rect::draw()
 	}
 }
 
-void Rect::update()
-{
-}
-
 void Rect::setTexture(int texID)
 {
 	this->texID = texID;

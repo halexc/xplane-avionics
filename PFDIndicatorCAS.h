@@ -8,9 +8,7 @@ class PFDIndicatorCAS :
 public:
 	PFDIndicatorCAS();
 	~PFDIndicatorCAS();
-
-	void update();
-
+	
 	void drawTex();
 
 	void setDataSources(float * cas, float * acceleration);

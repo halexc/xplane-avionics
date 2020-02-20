@@ -10,7 +10,6 @@ public:
 	~PFDGyro();
 
 	void draw();
-	void update();
 
 	void drawTex();
 	void drawGyro(float width, float height);

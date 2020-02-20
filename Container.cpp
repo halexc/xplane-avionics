@@ -64,6 +64,7 @@ void Container::drawTex()
 
 void Container::update()
 {
+	if (func_update) func_update();
 	for (DisplayElement * de : elements)
 	{
 		de->update();

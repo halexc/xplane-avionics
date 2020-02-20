@@ -19,10 +19,6 @@ void PFDGyro::draw()
 	drawGyro(width, height);
 }
 
-void PFDGyro::update()
-{
-}
-
 void PFDGyro::drawTex()
 {
 	drawTexPitchIndicator(*data_pitch, width, height);

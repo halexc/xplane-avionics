@@ -9,7 +9,6 @@ public:
 	PFDIndicatorAltitude();
 	~PFDIndicatorAltitude();
 
-	void update();
 	void drawTex();
 
 	void setDataSources(float * alt, float * radioAlt, float * vs);

@@ -10,7 +10,6 @@ public:
 	~Rect();
 
 	void draw();
-	void update();
 
 	void setTexture(int texID);
 	void setTextureCoordOffset(int i);
