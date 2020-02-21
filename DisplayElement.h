@@ -12,6 +12,7 @@ public:
 	void setUpdateFunction(void(*f)());
 
 	void setBounds(int x, int y, int width, int height);
+	void getBounds(int *x, int *y, int *width, int *height);
 
 protected:
 	void(*func_update)() = NULL;

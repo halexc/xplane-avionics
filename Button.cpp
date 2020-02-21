@@ -36,8 +36,18 @@ void Button::update()
 	hover = false;
 }
 
-void Button::onClick(int mouseX, int mouseY)
+void Button::onClick(XPLMMouseStatus status, float mouseX, float mouseY)
 {
+	hold = true;
+	if(actionButton)
+		actionButton(status, mouseX, mouseY);
+}
+
+void Button::onHover(float mouseX, float mouseY)
+{
+	hover = true;
+	if(actionHover)
+		actionHover(mouseX, mouseY);
 }
 
 void Button::setTextureIdle(XPLMTextureID idle)
@@ -55,6 +65,22 @@ void Button::setTextureClick(XPLMTextureID click)
 	texClick = click;
 }
 
+void Button::setActionClick(void(*f)(XPLMMouseStatus, float, float))
+{
+	actionButton = f;
+}
+void Button::setActionHover(void(*f)(float, float))
+{
+	actionHover = f;
+}
+
+
+void Button::setLabel(const char * string)
+{
+	strcpy(label, string);
+	textWidth = Utils::GetTextWidth(label, *font, size);
+}
+
 void Button::setLabel(const char * string, float scale)
 {
 	size = scale;
@@ -62,14 +88,14 @@ void Button::setLabel(const char * string, float scale)
 	textWidth = Utils::GetTextWidth(label, *font, size);
 }
 
-void Button::setColor(float c[3])
+void Button::setFontColor(float c[3])
 {
 	color[0] = c[0];
 	color[1] = c[1];
 	color[2] = c[2];
 }
 
-void Button::setColor(float r, float g, float b)
+void Button::setFontColor(float r, float g, float b)
 {
 	color[0] = r;
 	color[1] = g;

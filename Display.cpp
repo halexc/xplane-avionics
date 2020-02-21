@@ -2,6 +2,8 @@
 
 #include "Utils.h"
 
+#include "Button.h"
+
 #include "XPLMDisplay.h"
 #include "XPLMGraphics.h"
 #include "XPLMUtilities.h"
@@ -56,6 +58,25 @@ void Display::setResolution(int pixelsX, int pixelsY)
 void Display::addElement(DisplayElement * de)
 {
 	elements.push_back(de);
+}
+
+void Display::onClick(XPLMMouseStatus status, float mx, float my)
+{
+	for (DisplayElement * de : elements) {
+		if (Button * deButton = dynamic_cast<Button * >(de)) {
+			int x, y, width, height;
+			deButton->getBounds(&x, &y, &width, &height);
+
+			if (mx >= (float)x / resX  &&  mx <= (float)(x + width) / resX  &&  my >= (float)y / resY  &&  my <= (float)(y + height) / resY) {
+				deButton->onClick(XPLMMouseStatus status, mx * (float)resX / width - (float)x / width, my * (float)resY / height - (float)y / height);
+			}
+		}
+	}
+}
+
+void Display::onHover(float mx, float my)
+{
+
 }
 
 void Display::draw()

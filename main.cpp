@@ -92,6 +92,9 @@ float vs_data[2];
 float gps_data_lat[1];
 float gps_data_lon[1];
 
+// update functions:
+
+
 #if IBM
 #include <windows.h>
 BOOL APIENTRY DllMain(HANDLE hModule,

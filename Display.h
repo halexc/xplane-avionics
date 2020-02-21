@@ -19,6 +19,9 @@ public:
 	void setResolution(int pixelsX, int pixelsY);
 	void addElement(DisplayElement* de);
 
+	void onClick(XPLMMouseStatus status, float mx, float my);
+	void onHover(float mx, float my);
+
 	void draw();
 	void update();
 

@@ -25,25 +25,31 @@ public:
 
 	void draw();
 	void update();
-	void onClick(int mouseX, int mouseY);
+	void onClick(XPLMMouseStatus status, float mouseX, float mouseY);
+	void onHover(float mouseX, float mouseY);
 
 	void setTextureIdle(XPLMTextureID idle);
 	void setTextureHover(XPLMTextureID hover);
 	void setTextureClick(XPLMTextureID click);
 
+	void setActionClick(void(*f)(XPLMMouseStatus, float, float));
+	void setActionHover(void(*f)(float, float));
+
+	void setLabel(const char * string);
 	void setLabel(const char * string, float scale);
-	void setColor(float c[3]);
-	void setColor(float r, float g, float b);
+	void setFontColor(float c[3]);
+	void setFontColor(float r, float g, float b);
 	void setFont(std::map<GLchar, Character> * f);
 
 protected:
 	XPLMTextureID texIdle, texHover, texClick;
-	void(*actionButton) (void);
+	void(*actionButton) (XPLMMouseStatus, float, float);
+	void(*actionHover) (float, float);
 
 private:
 
 	char * label = new char[255];
-	float textWidth = 0, size = 0;
+	float textWidth = 0, size = 1;
 	float color[3] = { 1, 1, 1 };
 
 	std::map<GLchar, Character> * font;

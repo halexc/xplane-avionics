@@ -38,3 +38,15 @@ void DisplayElement::setBounds(int x, int y, int width, int height)
 	this->width = width;
 	this->height = height;
 }
+
+void DisplayElement::getBounds(int * x, int * y, int * width, int * height)
+{
+	if(x)
+		*x = this->x;
+	if(y)
+		*y = this->y;
+	if(width)
+		*width = this->width;
+	if(height)
+		*height = this->height;
+}
