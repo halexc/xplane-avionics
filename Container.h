@@ -1,5 +1,6 @@
 #pragma once
 #include "DisplayElementFBO.h"
+#include "Clickable.h"
 
 #include "GL/glew.h"
 #include "GL/gl.h"
@@ -11,10 +12,10 @@
 #include "XPLMGraphics.h"
 #include "XPLMUtilities.h"
 
-#include <list>
+#include <vector>
 
 class Container :
-	public DisplayElementFBO
+	public DisplayElementFBO, Clickable
 {
 public:
 	Container();
@@ -25,6 +26,10 @@ public:
 	void update();
 
 	void addElement(DisplayElement * element);
+	std::vector<DisplayElement*> getElements();
+
+	void onClick(XPLMMouseStatus status, float mx, float my);
+	void onHover(float mx, float my);
 
 	void setBounds(int x, int y, int width, int height);
 	void setBounds(int x, int y, int width, int height, int resX, int resY);
@@ -32,9 +37,6 @@ public:
 private:
 	int resX, resY;
 
-	//GLint tex;
-	//GLuint fbo;
-
-	std::list<DisplayElement*> elements;
+	std::vector<DisplayElement*> elements;
 };
 

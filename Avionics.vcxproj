@@ -124,6 +124,7 @@
     <ClInclude Include="AirportMap.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="CircularProgressGauge.h" />
+    <ClInclude Include="Clickable.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="DisplayElement.h" />

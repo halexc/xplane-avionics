@@ -1,5 +1,5 @@
 #include "Container.h"
-
+#include "Button.h"
 
 
 Container::Container()
@@ -74,6 +74,41 @@ void Container::update()
 void Container::addElement(DisplayElement * element)
 {
 	elements.push_back(element);
+}
+
+std::vector<DisplayElement*> Container::getElements()
+{
+	return elements;
+}
+
+void Container::onClick(XPLMMouseStatus status, float mx, float my)
+{
+	for (std::vector<DisplayElement*>::reverse_iterator it = elements.rbegin(); it != elements.rend(); it++) {
+		DisplayElement * de = *it;
+		if (Clickable * deButton = dynamic_cast<Clickable * >(de)) {
+			int x, y, width, height;
+			de->getBounds(&x, &y, &width, &height);
+
+			if (mx >= (float)x / resX  &&  mx <= (float)(x + width) / resX  &&  my >= (float)y / resY  &&  my <= (float)(y + height) / resY) {
+				deButton->onClick(status, mx * (float)resX / width - (float)x / width, my * (float)resY / height - (float)y / height);
+			}
+		}
+	}
+}
+
+void Container::onHover(float mx, float my)
+{
+	for (std::vector<DisplayElement*>::reverse_iterator it = elements.rbegin(); it != elements.rend(); it++) {
+		DisplayElement * de = *it;
+		if (Clickable * deButton = dynamic_cast<Clickable * >(de)) {
+			int x, y, width, height;
+			de->getBounds(&x, &y, &width, &height);
+
+			if (mx >= (float)x / resX  &&  mx <= (float)(x + width) / resX  &&  my >= (float)y / resY  &&  my <= (float)(y + height) / resY) {
+				deButton->onHover(mx * (float)resX / width - (float)x / width, my * (float)resY / height - (float)y / height);
+			}
+		}
+	}
 }
 
 void Container::setBounds(int x, int y, int width, int height)

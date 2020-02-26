@@ -30,6 +30,10 @@ static Display * displays[4];
 static Container * pagesPilot[10];
 static Container * pagesCopilot[10];
 
+// Handle mouse input:
+static XPLMMouseStatus mouseStatus = 0;
+int HandleMouseInput(XPLMWindowID inId, int x, int y, XPLMMouseStatus inMouse, void * inRefcon);
+
 std::map<GLchar, Character> * font_AirbusMCDUa = new std::map<GLchar, Character>;
 std::map<GLchar, Character> * font_AirbusPFD = new std::map<GLchar, Character>;
 
@@ -40,6 +44,11 @@ float * N1_1;
 float * N1_2;
 
 void setupContainer();
+
+XPLMDataRef DR_mx_panel = XPLMFindDataRef("sim/graphics/view/click_3d_x");
+XPLMDataRef DR_my_panel = XPLMFindDataRef("sim/graphics/view/click_3d_y");
+XPLMDataRef DR_mx_panel_pixels = XPLMFindDataRef("sim/graphics/view/click_3d_x_pixels");
+XPLMDataRef DR_my_panel_pixels = XPLMFindDataRef("sim/graphics/view/click_3d_y_pixels");
 
 XPLMDataRef DR_n1;
 XPLMDataRef DR_n2;
@@ -92,7 +101,8 @@ float vs_data[2];
 float gps_data_lat[1];
 float gps_data_lon[1];
 
-// update functions:
+//Overlay window for click handling:
+XPLMWindowID wndID;
 
 
 #if IBM
@@ -113,6 +123,38 @@ BOOL APIENTRY DllMain(HANDLE hModule,
 	return TRUE;
 }
 #endif
+
+void findDataRefs() {
+	DR_n1 = XPLMFindDataRef("sim/cockpit2/engine/indicators/N1_percent");
+	DR_n2 = XPLMFindDataRef("sim/cockpit2/engine/indicators/N2_percent");
+	DR_egt = XPLMFindDataRef("sim/cockpit2/engine/indicators/EGT_deg_C");
+	DR_fuelFlow = XPLMFindDataRef("sim/cockpit2/engine/indicators/fuel_flow_kg_sec");
+	DR_oilPress = XPLMFindDataRef("sim/cockpit2/engine/indicators/oil_pressure_psi");
+	DR_oilTemp = XPLMFindDataRef("sim/cockpit2/engine/indicators/oil_temperature_deg_C");
+
+	DR_fuelTank = XPLMFindDataRef("sim/cockpit2/fuel/fuel_quantity");
+
+	DR_hdg_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/heading_AHARS_deg_mag_pilot");
+	DR_pitch_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/pitch_AHARS_deg_pilot");
+	DR_roll_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/roll_AHARS_deg_pilot");
+	DR_cas_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/airspeed_kts_pilot");
+	DR_acc_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/airspeed_acceleration_kts_sec_pilot");
+	DR_alt_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/altitude_ft_pilot");
+	DR_vs_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/vvi_fpm_pilot");
+	DR_radio_alt_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/radio_altimeter_height_ft_pilot");
+
+	DR_hdg_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/heading_AHARS_deg_mag_copilot");
+	DR_pitch_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/pitch_AHARS_deg_copilot");
+	DR_roll_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/roll_AHARS_deg_copilot");
+	DR_cas_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/airspeed_kts_copilot");
+	DR_acc_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/airspeed_acceleration_kts_sec_copilot");
+	DR_alt_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/altitude_ft_copilot");
+	DR_vs_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/vvi_fpm_copilot");
+	DR_radio_alt_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/radio_altimeter_height_ft_copilot");
+
+	DR_lat = XPLMFindDataRef("sim/flightmodel/position/latitude");
+	DR_lon = XPLMFindDataRef("sim/flightmodel/position/longitude");
+}
 
 PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 {
@@ -145,45 +187,23 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 	strcat(tmpPath, "AirbusPFD.ttf");
 	Utils::LoadFont(tmpPath, 32, *font_AirbusPFD);
 
-	GLint tx_button;
-	strcpy(tmpPath, resPath);
-	strcat(tmpPath, "Button_default.png");
-	Utils::LoadTexturePNG(&tx_button, tmpPath);
 
 	displays[0] = new Display(0, 1 - 564.0f / 2048, 768.0f / 2048, 564.0f / 2048, 768, 564);
 	displays[1] = new Display(768.0f / 2048, 1 - 564.0f / 2048, 768.0f / 2048, 564.0f / 2048, 768, 564);
 	displays[2] = new Display(768.0f / 2048, 1 - 564.0f / 1024, 768.0f / 2048, 564.0f / 2048, 768, 564);
 	displays[3] = new Display(0, 1 - 564.0f / 1024, 768.0f / 2048, 564.0f / 2048, 768, 564);
 
-	DR_n1 = XPLMFindDataRef("sim/cockpit2/engine/indicators/N1_percent");
-	DR_n2 = XPLMFindDataRef("sim/cockpit2/engine/indicators/N2_percent");
-	DR_egt = XPLMFindDataRef("sim/cockpit2/engine/indicators/EGT_deg_C");
-	DR_fuelFlow = XPLMFindDataRef("sim/cockpit2/engine/indicators/fuel_flow_kg_sec");
-	DR_oilPress = XPLMFindDataRef("sim/cockpit2/engine/indicators/oil_pressure_psi");
-	DR_oilTemp = XPLMFindDataRef("sim/cockpit2/engine/indicators/oil_temperature_deg_C");
-
-	DR_fuelTank = XPLMFindDataRef("sim/cockpit2/fuel/fuel_quantity");
-
-	DR_hdg_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/heading_AHARS_deg_mag_pilot");
-	DR_pitch_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/pitch_AHARS_deg_pilot");
-	DR_roll_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/roll_AHARS_deg_pilot");
-	DR_cas_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/airspeed_kts_pilot");
-	DR_acc_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/airspeed_acceleration_kts_sec_pilot");
-	DR_alt_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/altitude_ft_pilot");
-	DR_vs_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/vvi_fpm_pilot");
-	DR_radio_alt_pilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/radio_altimeter_height_ft_pilot");
-
-	DR_hdg_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/heading_AHARS_deg_mag_copilot");
-	DR_pitch_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/pitch_AHARS_deg_copilot");
-	DR_roll_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/roll_AHARS_deg_copilot");
-	DR_cas_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/airspeed_kts_copilot");
-	DR_acc_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/airspeed_acceleration_kts_sec_copilot");
-	DR_alt_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/altitude_ft_copilot");
-	DR_vs_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/vvi_fpm_copilot");
-	DR_radio_alt_copilot = XPLMFindDataRef("sim/cockpit2/gauges/indicators/radio_altimeter_height_ft_copilot");
-
-	DR_lat = XPLMFindDataRef("sim/flightmodel/position/latitude");
-	DR_lon = XPLMFindDataRef("sim/flightmodel/position/longitude");
+	findDataRefs();
+	int lft, rgt, top, bot;
+	XPLMGetScreenBoundsGlobal(&lft, &top, &rgt, &bot);
+	wndID = XPLMCreateWindow(
+						lft, top, rgt, bot,												//Bounds
+						1,																//Is Visible?
+						[](XPLMWindowID, void *) {},									//Empty drawing function
+						[](XPLMWindowID, char, XPLMKeyFlags, char, void *, int){},		//Empty key handling function
+						HandleMouseInput,												//Mouse input handle function
+						NULL															//Refcon - not used
+						);
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//PFD Pilot:
@@ -218,6 +238,29 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 	navRosePilot->setBounds(256, -44, 256, 256);
 	navRosePilot->setFont(font_AirbusPFD);
 	displays[0]->addElement(navRosePilot);
+
+	GLint texButton, texHover, texClick;
+
+	strcpy(tmpPath, resPath);
+	strcat(tmpPath, "Button_default.png");
+	Utils::LoadTexturePNG(&texButton, tmpPath);
+	strcpy(tmpPath, resPath);
+	strcat(tmpPath, "Button_hover.png");
+	Utils::LoadTexturePNG(&texHover, tmpPath);
+
+	strcpy(tmpPath, resPath);
+	strcat(tmpPath, "Button_click.png");
+	Utils::LoadTexturePNG(&texClick, tmpPath);
+
+	Button * btTest = new Button();
+	btTest->setBounds(16, 16, 128, 48);
+	btTest->setFont(font_AirbusPFD);
+	btTest->setLabel(" ");
+	btTest->setFontColor(Utils::COLOR_BLACK);
+	btTest->setTextureIdle(texButton);
+	btTest->setTextureHover(texHover);
+	btTest->setTextureClick(texClick);
+	displays[0]->addElement(btTest);
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//PFD Copilot:
@@ -266,10 +309,46 @@ PLUGIN_API void XPluginReceiveMessage(XPLMPluginID	inFromWho, int inMessage, voi
 {
 }
 
+void update() {
+	float mx = XPLMGetDataf(DR_mx_panel), my = XPLMGetDataf(DR_my_panel);
+	float mxPixels = XPLMGetDataf(DR_mx_panel_pixels); //This is -1 if the mouse is not on the panel.
+	for (Display * d : displays) {
+		d->update();
+		//Check whether the mouse is on the panel
+		if (mxPixels != -1.0f) {
+			float x, y, w, h;
+			d->getBounds(&x, &y, &w, &h);
+			//Check whether the mouse is on the display
+			if (mx >= x && mx <= x + w && my >= y && my <= y + h) {
+				d->onHover(mx / w - x / w, my / h - y / h);
+
+				//If the mouse button is down, call the onClick function of each respective element
+				if (mouseStatus) {
+					d->onClick(mouseStatus, mx / w - x / w, my / h - y / h);
+					XPLMDebugString("Mouse click at: ");
+					XPLMDebugString(std::to_string(mx).c_str());
+					XPLMDebugString(", ");
+					XPLMDebugString(std::to_string(my).c_str());
+					XPLMDebugString(".\nIn current display coordinates: ");
+					XPLMDebugString(std::to_string(mx / w - x / w).c_str());
+					XPLMDebugString(", ");
+					XPLMDebugString(std::to_string(my / h - y / h).c_str());
+					XPLMDebugString(".\n");
+				}
+			}
+		}
+	}
+	mouseStatus = 0;
+}
+
 int render(XPLMDrawingPhase inPhase, int inIsBefore, void* inRefcon) {
 	switch (inPhase)
 	{
 	case xplm_Phase_Gauges:
+
+		//Update (Own callback later on):
+		update();
+
 		//Load necessary datarefs:
 		XPLMGetDatavf(DR_n1, n1_data, NULL, 2);
 		XPLMGetDatavf(DR_n2, n2_data, NULL, 2);
@@ -339,6 +418,7 @@ int render(XPLMDrawingPhase inPhase, int inIsBefore, void* inRefcon) {
 
 	return 1;
 }
+
 
 void setupContainer() {
 	//Nav Page (index 0):
@@ -662,4 +742,12 @@ void setupContainer() {
 	rectAircraft->setLineWidth(0);
 	rectAircraft->setTextureCoordOffset(1);
 	pagesPilot[2]->addElement(rectAircraft);
+}
+
+int HandleMouseInput(XPLMWindowID inId, int x, int y, XPLMMouseStatus inMouse, void * inRefcon) {
+	mouseStatus = inMouse;
+	XPLMDebugString("Mouse Click registered. XPLMMouseStatus: ");
+	XPLMDebugString(std::to_string(mouseStatus).c_str());
+	XPLMDebugString(".\n");
+	return 1;
 }

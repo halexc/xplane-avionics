@@ -12,6 +12,7 @@ Button::Button(int x, int y, int width, int height)
 
 Button::~Button()
 {
+	delete label;
 }
 
 void Button::draw()
@@ -34,6 +35,7 @@ void Button::update()
 {
 	if (!hover) hold = false;
 	hover = false;
+	if (func_update) func_update();
 }
 
 void Button::onClick(XPLMMouseStatus status, float mouseX, float mouseY)
@@ -74,18 +76,17 @@ void Button::setActionHover(void(*f)(float, float))
 	actionHover = f;
 }
 
-
 void Button::setLabel(const char * string)
 {
 	strcpy(label, string);
-	textWidth = Utils::GetTextWidth(label, *font, size);
+	if(font) textWidth = Utils::GetTextWidth(label, *font, size);
 }
 
 void Button::setLabel(const char * string, float scale)
 {
 	size = scale;
 	strcpy(label, string);
-	textWidth = Utils::GetTextWidth(label, *font, size);
+	if (font) textWidth = Utils::GetTextWidth(label, *font, size);
 }
 
 void Button::setFontColor(float c[3])
@@ -115,5 +116,7 @@ void Button::drawButtonQuad()
 		glTexCoord2f(1, 0);		glVertex2f(x + width,	y + height);
 		glTexCoord2f(1, 1);		glVertex2f(x + width,	y);
 	glEnd();
-	if (label) Utils::RenderText(label, *font, x + (width - textWidth) / 2, y + height / 2 - font->at('A').height / 2, size, color);
+	if (label)
+		if(font)
+			Utils::RenderText(label, *font, x + (width - textWidth) / 2, y + height / 2 - font->at('A').height / 2, size, color);
 }

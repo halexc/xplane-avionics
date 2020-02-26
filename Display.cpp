@@ -47,6 +47,14 @@ void Display::setBounds(float x, float y, float width, float height)
 	texH = height;
 }
 
+void Display::getBounds(float * x, float * y, float * width, float * height)
+{
+	if (x) *x = texX;
+	if (y) *y = texY;
+	if (width) *x = texW;
+	if (height) *height = texH;
+}
+
 void Display::setResolution(int pixelsX, int pixelsY)
 {
 	this->resX = pixelsX;
@@ -55,20 +63,32 @@ void Display::setResolution(int pixelsX, int pixelsY)
 	initialized = false;
 }
 
+void Display::getResolution(int * pixelsX, int * pixelsY)
+{
+	if (pixelsX) *pixelsX = resX;
+	if (pixelsY) *pixelsY = resY;
+}
+
 void Display::addElement(DisplayElement * de)
 {
 	elements.push_back(de);
 }
 
+std::vector<DisplayElement*> Display::getElements()
+{
+	return elements;
+}
+
 void Display::onClick(XPLMMouseStatus status, float mx, float my)
 {
-	for (DisplayElement * de : elements) {
-		if (Button * deButton = dynamic_cast<Button * >(de)) {
+	for (std::vector<DisplayElement*>::reverse_iterator it = elements.rbegin(); it != elements.rend(); it++) {
+		DisplayElement * de = *it;
+		if (Clickable * deButton = dynamic_cast<Clickable * >(de)) {
 			int x, y, width, height;
-			deButton->getBounds(&x, &y, &width, &height);
+			de->getBounds(&x, &y, &width, &height);
 
 			if (mx >= (float)x / resX  &&  mx <= (float)(x + width) / resX  &&  my >= (float)y / resY  &&  my <= (float)(y + height) / resY) {
-				deButton->onClick(XPLMMouseStatus status, mx * (float)resX / width - (float)x / width, my * (float)resY / height - (float)y / height);
+				deButton->onClick(status, mx * (float)resX / width - (float)x / width, my * (float)resY / height - (float)y / height);
 			}
 		}
 	}
@@ -76,7 +96,17 @@ void Display::onClick(XPLMMouseStatus status, float mx, float my)
 
 void Display::onHover(float mx, float my)
 {
+	for (std::vector<DisplayElement*>::reverse_iterator it = elements.rbegin(); it != elements.rend(); it++) {
+		DisplayElement * de = *it;
+		if (Clickable * deButton = dynamic_cast<Clickable * >(de)) {
+			int x, y, width, height;
+			de->getBounds(&x, &y, &width, &height);
 
+			if (mx >= (float)x / resX  &&  mx <= (float)(x + width) / resX  &&  my >= (float)y / resY  &&  my <= (float)(y + height) / resY) {
+				deButton->onHover(mx * (float)resX / width - (float)x / width, my * (float)resY / height - (float)y / height);
+			}
+		}
+	}
 }
 
 void Display::draw()

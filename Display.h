@@ -3,7 +3,11 @@
 #include "GL/glew.h"
 #include "GL/gl.h"
 #include "GL/glu.h"
-#include <list>
+
+#include "XPLMDefs.h"
+#include "XPLMDisplay.h"
+
+#include <vector>
 
 #pragma once
 class Display
@@ -16,8 +20,13 @@ public:
 	~Display();
 
 	void setBounds(float x, float y, float width, float height);
+	void getBounds(float * x, float * y, float * width, float * height);
+
 	void setResolution(int pixelsX, int pixelsY);
+	void getResolution(int * pixelsX, int * pixelsY);
+
 	void addElement(DisplayElement* de);
+	std::vector<DisplayElement*> getElements();
 
 	void onClick(XPLMMouseStatus status, float mx, float my);
 	void onHover(float mx, float my);
@@ -36,7 +45,7 @@ private:
 	GLuint framebuffer;
 	GLint texture;
 
-	std::list<DisplayElement*> elements;
+	std::vector<DisplayElement*> elements;
 
 	void init();
 

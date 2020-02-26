@@ -1,5 +1,6 @@
 #pragma once
 #include "DisplayElement.h"
+#include "Clickable.h"
 
 #include "XPLMDisplay.h"
 #include "XPLMGraphics.h"
@@ -15,7 +16,7 @@
 #include <map>
 
 class Button :
-	public DisplayElement
+	public DisplayElement, Clickable
 {
 public:
 
