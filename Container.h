@@ -15,15 +15,15 @@
 #include <vector>
 
 class Container :
-	public DisplayElementFBO, Clickable
+	public DisplayElementFBO, public Clickable
 {
 public:
 	Container();
 	Container(int resX, int resY);
 	~Container();
 
-	void drawTex();
-	void update();
+	virtual void drawTex();
+	virtual void update();
 
 	void addElement(DisplayElement * element);
 	std::vector<DisplayElement*> getElements();

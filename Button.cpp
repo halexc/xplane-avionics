@@ -40,7 +40,8 @@ void Button::update()
 
 void Button::onClick(XPLMMouseStatus status, float mouseX, float mouseY)
 {
-	hold = true;
+	if (status == xplm_MouseDown) hold = true;
+	if (status == xplm_MouseUp) hold = false;
 	if(actionButton)
 		actionButton(status, mouseX, mouseY);
 }

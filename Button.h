@@ -16,7 +16,7 @@
 #include <map>
 
 class Button :
-	public DisplayElement, Clickable
+	public DisplayElement, public Clickable
 {
 public:
 

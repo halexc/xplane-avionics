@@ -8,6 +8,8 @@
 #include "XPLMGraphics.h"
 #include "XPLMUtilities.h"
 
+#include <string>
+
 
 Display::Display()
 {
@@ -51,7 +53,7 @@ void Display::getBounds(float * x, float * y, float * width, float * height)
 {
 	if (x) *x = texX;
 	if (y) *y = texY;
-	if (width) *x = texW;
+	if (width) *width = texW;
 	if (height) *height = texH;
 }
 
@@ -83,12 +85,12 @@ void Display::onClick(XPLMMouseStatus status, float mx, float my)
 {
 	for (std::vector<DisplayElement*>::reverse_iterator it = elements.rbegin(); it != elements.rend(); it++) {
 		DisplayElement * de = *it;
-		if (Clickable * deButton = dynamic_cast<Clickable * >(de)) {
+		if (Clickable * c = dynamic_cast<Clickable*>(de)) {
 			int x, y, width, height;
 			de->getBounds(&x, &y, &width, &height);
 
-			if (mx >= (float)x / resX  &&  mx <= (float)(x + width) / resX  &&  my >= (float)y / resY  &&  my <= (float)(y + height) / resY) {
-				deButton->onClick(status, mx * (float)resX / width - (float)x / width, my * (float)resY / height - (float)y / height);
+			if (mx >= float(x) / resX  &&  mx <= float(x + width) / resX  &&  my >= float(y) / resY  &&  my <= float(y + height) / resY) {
+				c->onClick(status, mx * float(resX) / width - float(x) / width, my * float(resY) / height - (float)y / height);
 			}
 		}
 	}
@@ -98,12 +100,12 @@ void Display::onHover(float mx, float my)
 {
 	for (std::vector<DisplayElement*>::reverse_iterator it = elements.rbegin(); it != elements.rend(); it++) {
 		DisplayElement * de = *it;
-		if (Clickable * deButton = dynamic_cast<Clickable * >(de)) {
+		if (Clickable * c = dynamic_cast<Clickable*>(de)) {
 			int x, y, width, height;
 			de->getBounds(&x, &y, &width, &height);
 
-			if (mx >= (float)x / resX  &&  mx <= (float)(x + width) / resX  &&  my >= (float)y / resY  &&  my <= (float)(y + height) / resY) {
-				deButton->onHover(mx * (float)resX / width - (float)x / width, my * (float)resY / height - (float)y / height);
+			if (mx >= float(x) / resX  &&  mx <= float(x + width) / resX  &&  my >= float(y) / resY  &&  my <= float(y + height) / resY) {
+				c->onHover(mx * float(resX) / width - float(x) / width, my * float(resY) / height - (float)y / height);
 			}
 		}
 	}

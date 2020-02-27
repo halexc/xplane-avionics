@@ -310,6 +310,7 @@ PLUGIN_API void XPluginReceiveMessage(XPLMPluginID	inFromWho, int inMessage, voi
 }
 
 void update() {
+
 	float mx = XPLMGetDataf(DR_mx_panel), my = XPLMGetDataf(DR_my_panel);
 	float mxPixels = XPLMGetDataf(DR_mx_panel_pixels); //This is -1 if the mouse is not on the panel.
 	for (Display * d : displays) {
@@ -325,15 +326,6 @@ void update() {
 				//If the mouse button is down, call the onClick function of each respective element
 				if (mouseStatus) {
 					d->onClick(mouseStatus, mx / w - x / w, my / h - y / h);
-					XPLMDebugString("Mouse click at: ");
-					XPLMDebugString(std::to_string(mx).c_str());
-					XPLMDebugString(", ");
-					XPLMDebugString(std::to_string(my).c_str());
-					XPLMDebugString(".\nIn current display coordinates: ");
-					XPLMDebugString(std::to_string(mx / w - x / w).c_str());
-					XPLMDebugString(", ");
-					XPLMDebugString(std::to_string(my / h - y / h).c_str());
-					XPLMDebugString(".\n");
 				}
 			}
 		}
@@ -746,8 +738,8 @@ void setupContainer() {
 
 int HandleMouseInput(XPLMWindowID inId, int x, int y, XPLMMouseStatus inMouse, void * inRefcon) {
 	mouseStatus = inMouse;
-	XPLMDebugString("Mouse Click registered. XPLMMouseStatus: ");
-	XPLMDebugString(std::to_string(mouseStatus).c_str());
-	XPLMDebugString(".\n");
+	//XPLMDebugString("Mouse Click registered. XPLMMouseStatus: ");
+	//XPLMDebugString(std::to_string(mouseStatus).c_str());
+	//XPLMDebugString(".\n");
 	return 1;
 }

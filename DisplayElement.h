@@ -6,7 +6,7 @@ public:
 	DisplayElement();
 	~DisplayElement();
 
-	void update();
+	virtual void update();
 	virtual void draw();
 
 	void setUpdateFunction(void(*f)());
