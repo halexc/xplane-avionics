@@ -12,7 +12,6 @@ Button::Button(int x, int y, int width, int height)
 
 Button::~Button()
 {
-	delete label;
 }
 
 void Button::draw()
@@ -79,15 +78,15 @@ void Button::setActionHover(void(*f)(float, float))
 
 void Button::setLabel(const char * string)
 {
-	strcpy(label, string);
-	if(font) textWidth = Utils::GetTextWidth(label, *font, size);
+	label = std::string(string);
+	if(font) textWidth = Utils::GetTextWidth(label.c_str(), *font, size);
 }
 
 void Button::setLabel(const char * string, float scale)
 {
 	size = scale;
-	strcpy(label, string);
-	if (font) textWidth = Utils::GetTextWidth(label, *font, size);
+	label = std::string(string);
+	if (font) textWidth = Utils::GetTextWidth(label.c_str(), *font, size);
 }
 
 void Button::setFontColor(float c[3])
@@ -109,6 +108,12 @@ void Button::setFont(std::map<GLchar, Character>* f)
 	font = f;
 }
 
+void Button::setFontSize(float s)
+{
+	size = s;
+	if (font) textWidth = Utils::GetTextWidth(label.c_str(), *font, size);
+}
+
 void Button::drawButtonQuad()
 {
 	glBegin(GL_QUADS);
@@ -117,7 +122,7 @@ void Button::drawButtonQuad()
 		glTexCoord2f(1, 0);		glVertex2f(x + width,	y + height);
 		glTexCoord2f(1, 1);		glVertex2f(x + width,	y);
 	glEnd();
-	if (label)
+	if (label.size() > 0)
 		if(font)
-			Utils::RenderText(label, *font, x + (width - textWidth) / 2, y + height / 2 - font->at('A').height / 2, size, color);
+			Utils::RenderText(label.c_str(), *font, x + (width - textWidth) / 2, y + height / 2 - font->at('A').height / 2, size, color);
 }

@@ -8,7 +8,7 @@ public:
 	DisplayElementFBO();
 	~DisplayElementFBO();
 
-	void draw();
+	virtual void draw();
 	virtual void drawTex();
 
 	void setBounds(int x, int y, int width, int height);

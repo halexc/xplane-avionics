@@ -255,7 +255,7 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 	Button * btTest = new Button();
 	btTest->setBounds(16, 16, 128, 48);
 	btTest->setFont(font_AirbusPFD);
-	btTest->setLabel(" ");
+	btTest->setLabel("TEST");
 	btTest->setFontColor(Utils::COLOR_BLACK);
 	btTest->setTextureIdle(texButton);
 	btTest->setTextureHover(texHover);

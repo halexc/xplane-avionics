@@ -102,6 +102,9 @@
     <ClInclude Include="Clickable.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="TabContainer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Display.cpp">
@@ -163,6 +166,9 @@
     </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>Quelldateien\DisplayElements</Filter>
+    </ClCompile>
+    <ClCompile Include="TabContainer.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

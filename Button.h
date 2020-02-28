@@ -14,6 +14,7 @@
 #include "Utils.h"
 
 #include <map>
+#include <string>
 
 class Button :
 	public DisplayElement, public Clickable
@@ -24,10 +25,10 @@ public:
 	Button(int x, int y, int width, int height);
 	~Button();
 
-	void draw();
-	void update();
-	void onClick(XPLMMouseStatus status, float mouseX, float mouseY);
-	void onHover(float mouseX, float mouseY);
+	virtual void draw();
+	virtual void update();
+	virtual void onClick(XPLMMouseStatus status, float mouseX, float mouseY);
+	virtual void onHover(float mouseX, float mouseY);
 
 	void setTextureIdle(XPLMTextureID idle);
 	void setTextureHover(XPLMTextureID hover);
@@ -41,6 +42,7 @@ public:
 	void setFontColor(float c[3]);
 	void setFontColor(float r, float g, float b);
 	void setFont(std::map<GLchar, Character> * f);
+	void setFontSize(float s);
 
 protected:
 	XPLMTextureID texIdle, texHover, texClick;
@@ -49,7 +51,7 @@ protected:
 
 private:
 
-	char * label = new char[255];
+	std::string label;
 	float textWidth = 0, size = 1;
 	float color[3] = { 1, 1, 1 };
 

@@ -28,8 +28,8 @@ public:
 	void addElement(DisplayElement * element);
 	std::vector<DisplayElement*> getElements();
 
-	void onClick(XPLMMouseStatus status, float mx, float my);
-	void onHover(float mx, float my);
+	virtual void onClick(XPLMMouseStatus status, float mx, float my);
+	virtual void onHover(float mx, float my);
 
 	void setBounds(int x, int y, int width, int height);
 	void setBounds(int x, int y, int width, int height, int resX, int resY);
