@@ -2,17 +2,18 @@
 #include "DisplayElement.h"
 #include "Container.h"
 #include "Clickable.h"
+#include "Button.h"
 
 #include <vector>
 
 class TabContainer :
-	public DisplayElement, public Clickable
+	public DisplayElementFBO, public Clickable
 {
 public:
 	TabContainer();
 	~TabContainer();
 
-	virtual void draw();
+	virtual void drawTex();
 	virtual void update();
 
 	virtual void onClick(XPLMMouseStatus status, float mx, float my);
@@ -28,18 +29,27 @@ public:
 	void setTabTextureIdle(XPLMTextureID idle);
 	void setTabTextureHover(XPLMTextureID hover);
 	void setTabTextureClick(XPLMTextureID click);
+	void setTabTextureActive(XPLMTextureID active);
 
-	void setTab(Container * c);
+	void setTab(Container * c, Button * b);
+	Container * getTabButtons();
+
+	void setTabBarBounds(int x, int y, int width, int height);
+	void setTabsPerLine(int n);
 
 private:
-	XPLMTextureID texIdle, texHover, texClick;
+	void reorganizeTabs();
+
+	XPLMTextureID texIdle, texHover, texClick, texActive;
 
 	float size = 1;
 	float color[3] = { 1, 1, 1 };
+	int tabsPerLine = 4;
 
 	std::map<GLchar, Character> * font;
 
 	Container * tabs;
 	Container * content;
+	Button * activeTab;
 };
 

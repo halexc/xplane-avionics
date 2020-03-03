@@ -15,6 +15,7 @@
 
 #include <map>
 #include <string>
+#include <functional>
 
 class Button :
 	public DisplayElement, public Clickable
@@ -34,8 +35,8 @@ public:
 	void setTextureHover(XPLMTextureID hover);
 	void setTextureClick(XPLMTextureID click);
 
-	void setActionClick(void(*f)(XPLMMouseStatus, float, float));
-	void setActionHover(void(*f)(float, float));
+	void setActionClick(std::function<void(XPLMMouseStatus, float, float)> f);
+	void setActionHover(std::function<void(float, float)> f);
 
 	void setLabel(const char * string);
 	void setLabel(const char * string, float scale);
@@ -46,8 +47,8 @@ public:
 
 protected:
 	XPLMTextureID texIdle, texHover, texClick;
-	void(*actionButton) (XPLMMouseStatus, float, float);
-	void(*actionHover) (float, float);
+	std::function<void(XPLMMouseStatus, float, float)> actionButton;
+	std::function<void(float, float)> actionHover;
 
 private:
 

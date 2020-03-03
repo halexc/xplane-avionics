@@ -67,11 +67,11 @@ void Button::setTextureClick(XPLMTextureID click)
 	texClick = click;
 }
 
-void Button::setActionClick(void(*f)(XPLMMouseStatus, float, float))
+void Button::setActionClick(std::function<void(XPLMMouseStatus, float, float)> f)
 {
 	actionButton = f;
 }
-void Button::setActionHover(void(*f)(float, float))
+void Button::setActionHover(std::function<void(float, float)> f)
 {
 	actionHover = f;
 }

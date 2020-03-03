@@ -24,6 +24,7 @@
 #include "AirportMap.h"
 #include "NavRose.h"
 #include "Rect.h"
+#include "TabContainer.h"
 
 static int render(XPLMDrawingPhase inPhase, int inIsBefore, void* inRefcon);
 static Display * displays[4];
@@ -104,6 +105,7 @@ float gps_data_lon[1];
 //Overlay window for click handling:
 XPLMWindowID wndID;
 
+GLint texButton, texHover, texClick;
 
 #if IBM
 #include <windows.h>
@@ -239,7 +241,6 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 	navRosePilot->setFont(font_AirbusPFD);
 	displays[0]->addElement(navRosePilot);
 
-	GLint texButton, texHover, texClick;
 
 	strcpy(tmpPath, resPath);
 	strcat(tmpPath, "Button_default.png");
@@ -417,7 +418,7 @@ void setupContainer() {
 	char* tmpPath = new char[255];
 
 	pagesPilot[0] = new Container();
-	pagesPilot[0]->setBounds(0, 0, 384, 564);
+	pagesPilot[0]->setBounds(384, 0, 384, 564);
 	displays[1]->addElement(pagesPilot[0]);
 
 	//XPLMDebugString("main.cpp: Loading airport data.\n");
@@ -446,8 +447,8 @@ void setupContainer() {
 	pagesPilot[0]->addElement(navRoseND);
 
 	pagesCopilot[0] = new Container();
-	pagesCopilot[0]->setBounds(384, 0, 384, 564);
-	displays[3]->addElement(pagesCopilot[0]);
+	pagesCopilot[0]->setBounds(0, 0, 384, 436);
+	//displays[3]->addElement(pagesCopilot[0]);
 
 	AirportMap * mapCo = new AirportMap();
 	mapCo->setAirport(apt);
@@ -465,7 +466,7 @@ void setupContainer() {
 
 	//General Info Page (index 1):
 	pagesPilot[1] = new Container();
-	pagesPilot[1]->setBounds(384, 0, 384, 564);
+	pagesPilot[1]->setBounds(0, 0, 384, 564);
 	displays[1]->addElement(pagesPilot[1]);
 
 	//Engine Stats:
@@ -721,8 +722,8 @@ void setupContainer() {
 
 	//FLT CTRL (index 2):
 	pagesPilot[2] = new Container();
-	pagesPilot[2]->setBounds(0, 0, 384, 564);
-	displays[3]->addElement(pagesPilot[2]);
+	pagesPilot[2]->setBounds(0, 0, 384, 436);
+	//displays[3]->addElement(pagesPilot[2]);
 
 	Rect * rectAircraft = new Rect();
 	strcpy(tmpPath, resPath);
@@ -730,10 +731,33 @@ void setupContainer() {
 	GLint tex;
 	Utils::LoadTexturePNG(&tex, tmpPath);
 	rectAircraft->setTexture(tex);
-	rectAircraft->setBounds(0, 96, 384, 384);
+	rectAircraft->setBounds(0, 48, 384, 384);
 	rectAircraft->setLineWidth(0);
 	rectAircraft->setTextureCoordOffset(1);
 	pagesPilot[2]->addElement(rectAircraft);
+
+
+	TabContainer * pageContainer = new TabContainer();
+	pageContainer->setBounds(0, 0, 384, 564);
+	pageContainer->setTabBarBounds(0, 436, 384, 128);
+	pageContainer->setTabFont(font_AirbusMCDUa);
+	pageContainer->setTabFontSize(0.75f);
+	pageContainer->setTabFontColor(Utils::COLOR_BLACK);
+	pageContainer->setTabsPerLine(5);
+	
+	pageContainer->setTabTextureIdle(texButton);
+	pageContainer->setTabTextureHover(texHover);
+	pageContainer->setTabTextureClick(texClick);
+	pageContainer->setTabTextureActive(texClick);
+
+	pageContainer->addTab("MAP", pagesCopilot[0]);
+	pageContainer->addTab("FLT CTRL", pagesPilot[2]);
+	pageContainer->addTab("STATUS", pagesPilot[1]);
+	pageContainer->addTab("TEST 1", NULL);
+	pageContainer->addTab("TEST 2", NULL);
+	pageContainer->addTab("TEST 3", NULL);
+	pageContainer->addTab("TEST 4", NULL);
+	displays[3]->addElement(pageContainer);
 }
 
 int HandleMouseInput(XPLMWindowID inId, int x, int y, XPLMMouseStatus inMouse, void * inRefcon) {
