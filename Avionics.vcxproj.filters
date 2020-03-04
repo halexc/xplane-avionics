@@ -103,6 +103,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="TabContainer.h">
+      <Filter>Headerdateien\DisplayElements\BasicElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkbox.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
@@ -168,6 +171,9 @@
       <Filter>Quelldateien\DisplayElements</Filter>
     </ClCompile>
     <ClCompile Include="TabContainer.cpp">
+      <Filter>Quelldateien\DisplayElements\BasicElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkbox.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

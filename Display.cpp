@@ -151,6 +151,7 @@ void Display::draw()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, oldFramebuffer);
 
+	glColor3f(1, 1, 1);
 	XPLMBindTexture2d(texture, 0);
 	glBegin(GL_QUADS);
 		glTexCoord2f(0, 0);		glVertex2f(texX, texY);

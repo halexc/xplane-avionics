@@ -94,6 +94,7 @@ void TabContainer::onHover(float mx, float my)
 void TabContainer::addTab(const char * label, Container * c)
 {
 	Button * b = new Button();
+
 	b->setActionClick([this, c, b](XPLMMouseStatus status, float mx, float my) 
 	{
 	if(status == xplm_MouseDown)this->setTab(c, b);
@@ -104,6 +105,7 @@ void TabContainer::addTab(const char * label, Container * c)
 	b->setFont(font);
 	b->setFontSize(size);
 	b->setFontColor(color);
+	b->setLabel(label);
 
 	tabs->addElement(b);
 	reorganizeTabs();
@@ -219,21 +221,29 @@ void TabContainer::setTabsPerLine(int n)
 	reorganizeTabs();
 }
 
+void TabContainer::setTabSpacing(float sp)
+{
+	spacing = sp;
+	reorganizeTabs();
+}
+
 void TabContainer::reorganizeTabs()
 {
 	// This function changes the bounds of the tab buttons according to
 	// the specified number of tabs per line and the tab bar bounds.
 	// The tabs are organized from left to right, then top to bottom.
-	int lines = ceil((float)tabs->getElements().size() / tabsPerLine);
-	int width, height;
-	tabs->getBounds(NULL, NULL, &width, &height);
+	int lines = ceil((float)tabs->getElements().size() / (float)tabsPerLine);
+	int x, y, width, height;
+	tabs->getBounds(&x, &y, &width, &height);
 
+	float btWidth = float(width) / tabsPerLine - spacing / 2;
+	float btHeight = float(height) / lines - spacing / 2;
 	// Set the bounds for each tab button:
 	for (int i = 0; i < tabs->getElements().size(); ++i)
 	{
-		int xPos = (i % tabsPerLine) / tabsPerLine * width;
-		int yPos = height - (i / tabsPerLine * height / lines);
-		tabs->getElements().at(i)->setBounds(xPos, yPos - height / lines, xPos + width / tabsPerLine, yPos);
+		int xPos = (int) (spacing / 2 + (i % tabsPerLine) * (btWidth + spacing));
+		int yPos = (int) (height - spacing / 2 - (i / tabsPerLine) * (btHeight + spacing));
+		tabs->getElements().at(i)->setBounds(xPos, (int)(yPos - btHeight), (int) btWidth, (int)btHeight);
 	}
 }
 

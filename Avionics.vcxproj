@@ -123,6 +123,7 @@
     <ClInclude Include="Airport.h" />
     <ClInclude Include="AirportMap.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Checkbox.h" />
     <ClInclude Include="CircularProgressGauge.h" />
     <ClInclude Include="Clickable.h" />
     <ClInclude Include="Container.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="Airport.cpp" />
     <ClCompile Include="AirportMap.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Checkbox.cpp" />
     <ClCompile Include="CircularProgressGauge.cpp" />
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="Display.cpp" />

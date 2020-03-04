@@ -36,6 +36,7 @@ public:
 
 	void setTabBarBounds(int x, int y, int width, int height);
 	void setTabsPerLine(int n);
+	void setTabSpacing(float sp);
 
 private:
 	void reorganizeTabs();
@@ -45,6 +46,7 @@ private:
 	float size = 1;
 	float color[3] = { 1, 1, 1 };
 	int tabsPerLine = 4;
+	float spacing = 2.0f;
 
 	std::map<GLchar, Character> * font;
 

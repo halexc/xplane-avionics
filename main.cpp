@@ -25,6 +25,7 @@
 #include "NavRose.h"
 #include "Rect.h"
 #include "TabContainer.h"
+#include "Checkbox.h"
 
 static int render(XPLMDrawingPhase inPhase, int inIsBefore, void* inRefcon);
 static Display * displays[4];
@@ -263,6 +264,16 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 	btTest->setTextureClick(texClick);
 	displays[0]->addElement(btTest);
 
+	GLint tex;
+	strcpy(tmpPath, resPath);
+	strcat(tmpPath, "Checkmark.png");
+	Utils::LoadTexturePNG(&tex, tmpPath);
+	Checkbox * checkTest = new Checkbox();
+	checkTest->setBounds(640, 16, 48, 48);
+	checkTest->setCheckmarkTexture(tex);
+	checkTest->setCheckmarkColor3fv(Utils::COLOR_GREEN);
+	displays[0]->addElement(checkTest);
+
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//PFD Copilot:
 	PFDGyro * gyro_copilot = new PFDGyro();
@@ -447,12 +458,12 @@ void setupContainer() {
 	pagesPilot[0]->addElement(navRoseND);
 
 	pagesCopilot[0] = new Container();
-	pagesCopilot[0]->setBounds(0, 0, 384, 436);
+	pagesCopilot[0]->setBounds(0, 0, 384, 468);
 	//displays[3]->addElement(pagesCopilot[0]);
 
 	AirportMap * mapCo = new AirportMap();
 	mapCo->setAirport(apt);
-	mapCo->setBounds(0, 0, 384, 512);
+	mapCo->setBounds(0, 0, 384, 468);
 	mapCo->setScale(1852);
 	mapCo->setDataSource_hdg(&(hdg_data[1]));
 	mapCo->setDataSource_GPS(&(gps_data_lat[0]), &(gps_data_lon[0]));
@@ -460,13 +471,13 @@ void setupContainer() {
 
 	NavRose * navRoseND_FO = new NavRose();
 	navRoseND_FO->setHdgData(&(hdg_data[1]));
-	navRoseND_FO->setBounds(0, 64, 384, 384);
+	navRoseND_FO->setBounds(0, 42, 384, 384);
 	navRoseND_FO->setFont(font_AirbusPFD);
 	pagesCopilot[0]->addElement(navRoseND_FO);
 
 	//General Info Page (index 1):
 	pagesPilot[1] = new Container();
-	pagesPilot[1]->setBounds(0, 0, 384, 564);
+	pagesPilot[1]->setBounds(0, -96, 384, 564);
 	displays[1]->addElement(pagesPilot[1]);
 
 	//Engine Stats:
@@ -722,7 +733,7 @@ void setupContainer() {
 
 	//FLT CTRL (index 2):
 	pagesPilot[2] = new Container();
-	pagesPilot[2]->setBounds(0, 0, 384, 436);
+	pagesPilot[2]->setBounds(0, 0, 384, 468);
 	//displays[3]->addElement(pagesPilot[2]);
 
 	Rect * rectAircraft = new Rect();
@@ -739,11 +750,12 @@ void setupContainer() {
 
 	TabContainer * pageContainer = new TabContainer();
 	pageContainer->setBounds(0, 0, 384, 564);
-	pageContainer->setTabBarBounds(0, 436, 384, 128);
+	pageContainer->setTabBarBounds(0, 468, 384, 96);
 	pageContainer->setTabFont(font_AirbusMCDUa);
-	pageContainer->setTabFontSize(0.75f);
+	pageContainer->setTabFontSize(0.375f);
 	pageContainer->setTabFontColor(Utils::COLOR_BLACK);
 	pageContainer->setTabsPerLine(5);
+	pageContainer->setTabSpacing(2);
 	
 	pageContainer->setTabTextureIdle(texButton);
 	pageContainer->setTabTextureHover(texHover);
@@ -756,7 +768,6 @@ void setupContainer() {
 	pageContainer->addTab("TEST 1", NULL);
 	pageContainer->addTab("TEST 2", NULL);
 	pageContainer->addTab("TEST 3", NULL);
-	pageContainer->addTab("TEST 4", NULL);
 	displays[3]->addElement(pageContainer);
 }
 

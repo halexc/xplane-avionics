@@ -22,6 +22,17 @@ void DisplayElementFBO::draw()
 	glEnd();
 }
 
+void DisplayElementFBO::draw(float offsetX, float offsetY)
+{
+	XPLMBindTexture2d(texFBO, 0);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);		glVertex2f(offsetX + x, offsetY + y);
+	glTexCoord2f(0, 1);		glVertex2f(offsetX + x, offsetY + y + height);
+	glTexCoord2f(1, 1);		glVertex2f(offsetX + x + width, offsetY + y + height);
+	glTexCoord2f(1, 0);		glVertex2f(offsetX + x + width, offsetY + y);
+	glEnd();
+}
+
 void DisplayElementFBO::drawTex()
 {
 	if (!init) {

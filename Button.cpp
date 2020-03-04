@@ -124,5 +124,5 @@ void Button::drawButtonQuad()
 	glEnd();
 	if (label.size() > 0)
 		if(font)
-			Utils::RenderText(label.c_str(), *font, x + (width - textWidth) / 2, y + height / 2 - font->at('A').height / 2, size, color);
+			Utils::RenderText(label.c_str(), *font, x + (width - textWidth) / 2, y + height / 2 - font->at('A').height * 0.5f * size, size, color);
 }
