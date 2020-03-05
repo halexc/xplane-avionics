@@ -128,6 +128,7 @@ BOOL APIENTRY DllMain(HANDLE hModule,
 #endif
 
 void findDataRefs() {
+	//Find all the necessary data refs from XPlane:
 	DR_n1 = XPLMFindDataRef("sim/cockpit2/engine/indicators/N1_percent");
 	DR_n2 = XPLMFindDataRef("sim/cockpit2/engine/indicators/N2_percent");
 	DR_egt = XPLMFindDataRef("sim/cockpit2/engine/indicators/EGT_deg_C");
@@ -165,9 +166,11 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 	strcpy(outSig, "camp.aircraft.avionics");
 	strcpy(outDesc, "This Plugin manages the displays in the cockpit of my CSeries/A220.");
 
+	//Register DrawCallback
 	XPLMRegisterDrawCallback(render, xplm_Phase_Gauges, 1, NULL);
-	XPLMGetPluginInfo(XPLMGetMyID(), NULL, pluginPath, NULL, NULL);
 
+	//Get the file path to the resources folder:
+	XPLMGetPluginInfo(XPLMGetMyID(), NULL, pluginPath, NULL, NULL);
 	int i; //Last position in the char* pluginPath
 		   //Delete the last entries to "move up" in the directory (7 for "win.xpl", 1 for "\", and 3 for "x64")
 	for (i = 0; i < 255; i++) {
@@ -180,6 +183,7 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 	strcat(resPath, "res\\");
 	strcpy(Utils::resourcePath, resPath);
 
+	// Load 2 fonts (ECAMa, AirbusPFD) for testing
 	char* tmpPath = new char[255];
 	strcpy(tmpPath, resPath);
 	strcat(tmpPath, "ECAMa.ttf");
@@ -190,13 +194,15 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 	strcat(tmpPath, "AirbusPFD.ttf");
 	Utils::LoadFont(tmpPath, 32, *font_AirbusPFD);
 
-
+	// Set up the displays:
 	displays[0] = new Display(0, 1 - 564.0f / 2048, 768.0f / 2048, 564.0f / 2048, 768, 564);
 	displays[1] = new Display(768.0f / 2048, 1 - 564.0f / 2048, 768.0f / 2048, 564.0f / 2048, 768, 564);
 	displays[2] = new Display(768.0f / 2048, 1 - 564.0f / 1024, 768.0f / 2048, 564.0f / 2048, 768, 564);
 	displays[3] = new Display(0, 1 - 564.0f / 1024, 768.0f / 2048, 564.0f / 2048, 768, 564);
 
 	findDataRefs();
+
+	// Set up window that catches mouse events
 	int lft, rgt, top, bot;
 	XPLMGetScreenBoundsGlobal(&lft, &top, &rgt, &bot);
 	wndID = XPLMCreateWindow(
@@ -213,69 +219,112 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc)
 	int pfdGyro_width = 768;
 	int pfdGyro_height = 352;
 
+	//This is how to set up a Primary Flight Display (PFD):
+	//  First, create the necessary elements: A PFDGyro (gyroscope), a
+	//  PFDIndicatorCAS (speed indicator), and a PFDIndicatorAltitude
+	//  (altitude indicator). Then, add these elements to a PFD object.
+
+	// PFDGyro requires you to set 3 characteristics: The bounds (usually
+	// across the whole PFD), the font of the pitch numbers, and the data
+	// sources (pointers to floats for pitch, roll, and heading data).
 	PFDGyro * gyro_pilot = new PFDGyro();
 	gyro_pilot->setBounds(0, 0, pfdGyro_width, pfdGyro_height);
 	gyro_pilot->setFont(font_AirbusPFD);
 	gyro_pilot->setDataSources(&(pitch_data[0]), &(roll_data[0]), &(hdg_data[0]));
 
+	// PFDIndicatorCAS also requires the same parameters to be set up as
+	// the PFDGyro, with the exception that the data sources now point to
+	// airspeed and acceleration data.
 	PFDIndicatorCAS * cas_pilot = new PFDIndicatorCAS();
 	cas_pilot->setBounds((int)(0.17f * pfdGyro_width), (int)(0.2f * pfdGyro_height), (int)(0.1f * pfdGyro_width), (int)(0.6f * pfdGyro_height));
 	cas_pilot->setFont(font_AirbusPFD);
 	cas_pilot->setDataSources(&(cas_data[0]), &(acc_data[0]));
 
+	// The same goes for the PFDIndicatorAltitude, which as data takes
+	// barometric altitude, radio altitude, and vertical speed.
 	PFDIndicatorAltitude * alt_pilot = new PFDIndicatorAltitude();
 	alt_pilot->setBounds((int)(0.73f * pfdGyro_width), (int)(0.2f * pfdGyro_height), (int)(0.1f * pfdGyro_width), (int)(0.6f * pfdGyro_height));
 	alt_pilot->setFont(font_AirbusPFD);
 	alt_pilot->setDataSources(&(alt_data[0]), &(radioAlt_data[0]), &(vs_data[0]));
 
+	// Now, create a PFD object and set the gyro, speedIndicator, and
+	// altIndicator pointers to the recently created objects. Again,
+	// you also need to set the bounds.
 	PFD * pfd_pilot = new PFD();
-	pfd_pilot->setBounds(0, 212, 768, 352);
+	pfd_pilot->setBounds(0, 212, pfdGyro_width, pfdGyro_height);
 	pfd_pilot->gyro = gyro_pilot;
 	pfd_pilot->speedIndicator = cas_pilot;
 	pfd_pilot->altIndicator = alt_pilot;
 
+	// Add the PFD to the correct display.
 	displays[0]->addElement(pfd_pilot);
 
+	// Create and add an auxiliary NavRose below the PFD. The NavRose
+	// object needs to have its bounds set as well as a font and the
+	// data source pointer.
 	NavRose * navRosePilot = new NavRose();
 	navRosePilot->setHdgData(&(hdg_data[0]));
 	navRosePilot->setBounds(256, -44, 256, 256);
 	navRosePilot->setFont(font_AirbusPFD);
 	displays[0]->addElement(navRosePilot);
 
-
-	strcpy(tmpPath, resPath);
-	strcat(tmpPath, "Button_default.png");
-	Utils::LoadTexturePNG(&texButton, tmpPath);
-	strcpy(tmpPath, resPath);
-	strcat(tmpPath, "Button_hover.png");
-	Utils::LoadTexturePNG(&texHover, tmpPath);
-
-	strcpy(tmpPath, resPath);
-	strcat(tmpPath, "Button_click.png");
-	Utils::LoadTexturePNG(&texClick, tmpPath);
-
-	Button * btTest = new Button();
-	btTest->setBounds(16, 16, 128, 48);
-	btTest->setFont(font_AirbusPFD);
-	btTest->setLabel("TEST");
-	btTest->setFontColor(Utils::COLOR_BLACK);
-	btTest->setTextureIdle(texButton);
-	btTest->setTextureHover(texHover);
-	btTest->setTextureClick(texClick);
-	displays[0]->addElement(btTest);
-
+	// Load checkmark texture.
 	GLint tex;
 	strcpy(tmpPath, resPath);
 	strcat(tmpPath, "Checkmark.png");
 	Utils::LoadTexturePNG(&tex, tmpPath);
+	
+	// Checkboxes theoretically only need their bounds to be
+	// set, but preferably also have a checkmark texture. You
+	// can check for the checkbox status using isChecked().
+	// You can also change the color of the checkmark, the
+	// background (or even add a background texture), as well
+	// as the border color and width.
 	Checkbox * checkTest = new Checkbox();
 	checkTest->setBounds(640, 16, 48, 48);
 	checkTest->setCheckmarkTexture(tex);
 	checkTest->setCheckmarkColor3fv(Utils::COLOR_GREEN);
 	displays[0]->addElement(checkTest);
 
+	// Load button textures (idle, hover, and click):
+	strcpy(tmpPath, resPath);
+	strcat(tmpPath, "Button_default.png");
+	Utils::LoadTexturePNG(&texButton, tmpPath);
+	strcpy(tmpPath, resPath);
+	strcat(tmpPath, "Button_hover.png");
+	Utils::LoadTexturePNG(&texHover, tmpPath);
+	strcpy(tmpPath, resPath);
+	strcat(tmpPath, "Button_click.png");
+	Utils::LoadTexturePNG(&texClick, tmpPath);
+
+	// Buttons require you to set the bounds. It is recommended
+	// to also add a label (and a font) as well as textures for
+	// the appearence when idle, hovered, and clicked. If you
+	// want your button to do something, also add actions on
+	// hover and on click.
+	Button * btTest = new Button();
+	btTest->setBounds(16, 16, 128, 48);
+	btTest->setFont(font_AirbusPFD);
+	//btTest->setLabel("TEST");
+	btTest->setFontColor3fv(Utils::COLOR_BLACK);
+	btTest->setTextureIdle(texButton);
+	btTest->setTextureHover(texHover);
+	btTest->setTextureClick(texClick);
+	btTest->setActionClick([checkTest, btTest](XPLMMouseStatus status, float mx, float my) 
+		{
+			// If the checkbox is marked, clicking the button changes the
+			// checkmark's color to a random color.
+			if (status == xplm_MouseUp && checkTest->isChecked()) {
+				checkTest->setCheckmarkColor3f(static_cast<float>(rand())/ static_cast<float>(RAND_MAX),
+													static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
+														static_cast<float>(rand()) / static_cast<float>(RAND_MAX));
+			}
+		});
+	displays[0]->addElement(btTest);
+
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//PFD Copilot:
+	// Same as the PFD for the pilot
 	PFDGyro * gyro_copilot = new PFDGyro();
 	gyro_copilot->setBounds(0, 0, pfdGyro_width, pfdGyro_height);
 	gyro_copilot->setFont(font_AirbusPFD);
@@ -438,11 +487,18 @@ void setupContainer() {
 	//strcat(tmpPath, "EDDL_aptdat.txt");
 	//strcat(tmpPath, "EDDF.dat");
 	strcat(tmpPath, "EHAM.dat");
+
+	// Load the Airport data. This will later happen automatically
 	Airport * apt = new Airport();
 	if (apt->loadAirport(tmpPath, "EHAM")) {
 		XPLMDebugString("main.cpp: Successfully loaded Airport data for EHAM.\n");
 	}
 
+	// The AirportMap needs an airport and bounds. Additionally, it
+	// is preferred to set a scale, which represents how many meters
+	// are displayed across the width. Finally, adding Heading and 
+	// Position data enables the map to rotate and move with the 
+	// aircraft.
 	AirportMap * map = new AirportMap();
 	map->setAirport(apt);
 	map->setBounds(0, 0, 384, 512);
@@ -451,12 +507,15 @@ void setupContainer() {
 	map->setDataSource_GPS(&(gps_data_lat[0]), &(gps_data_lon[0]));
 	pagesPilot[0]->addElement(map);
 
+	// The NavRose object needs to have its bounds set as well as 
+	// a font and the data source pointer.
 	NavRose * navRoseND = new NavRose();
 	navRoseND->setHdgData(&(hdg_data[0]));
 	navRoseND->setBounds(0, 64, 384, 384);
 	navRoseND->setFont(font_AirbusPFD);
 	pagesPilot[0]->addElement(navRoseND);
 
+	// Airport Map copilot:
 	pagesCopilot[0] = new Container();
 	pagesCopilot[0]->setBounds(0, 0, 384, 468);
 	//displays[3]->addElement(pagesCopilot[0]);

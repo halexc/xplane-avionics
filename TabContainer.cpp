@@ -104,7 +104,7 @@ void TabContainer::addTab(const char * label, Container * c)
 	b->setTextureClick(texClick);
 	b->setFont(font);
 	b->setFontSize(size);
-	b->setFontColor(color);
+	b->setFontColor3fv(color);
 	b->setLabel(label);
 
 	tabs->addElement(b);
@@ -117,7 +117,7 @@ void TabContainer::setTabFontColor(float c[3])
 	color[2] = c[2];
 	for (DisplayElement * de : tabs->getElements()) {
 		if (Button * b = dynamic_cast<Button*>(de)) {
-			b->setFontColor(color);
+			b->setFontColor3fv(color);
 		}
 	}
 }
@@ -129,7 +129,7 @@ void TabContainer::setTabFontColor(float r, float g, float b)
 	color[2] = b;
 	for (DisplayElement * de : tabs->getElements()) {
 		if (Button * b = dynamic_cast<Button*>(de)) {
-			b->setFontColor(color);
+			b->setFontColor3fv(color);
 		}
 	}
 }

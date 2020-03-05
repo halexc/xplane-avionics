@@ -40,10 +40,15 @@ public:
 
 	void setLabel(const char * string);
 	void setLabel(const char * string, float scale);
-	void setFontColor(float c[3]);
-	void setFontColor(float r, float g, float b);
+	void setFontColor3fv(float c[3]);
+	void setFontColor3f(float r, float g, float b);
 	void setFont(std::map<GLchar, Character> * f);
 	void setFontSize(float s);
+
+	void setButtonColor4fv(float c[4]);
+	void setButtonColor4f(float r, float g, float b, float a);
+	void setButtonColor3fv(float c[3]);
+	void setButtonColor3f(float r, float g, float b);
 
 protected:
 	XPLMTextureID texIdle, texHover, texClick;
@@ -52,9 +57,10 @@ protected:
 
 private:
 
-	std::string label;
+	std::string label = "";
 	float textWidth = 0, size = 1;
 	float color[3] = { 1, 1, 1 };
+	float colorButton[4] = { 1, 1, 1, 1 };
 
 	std::map<GLchar, Character> * font;
 
