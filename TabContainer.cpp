@@ -93,12 +93,16 @@ void TabContainer::onHover(float mx, float my)
 
 void TabContainer::addTab(const char * label, Container * c)
 {
+	// For each tab, add a new button which switches the view to the tab.
 	Button * b = new Button();
 
+	// This button needs its click action set accordingly:
 	b->setActionClick([this, c, b](XPLMMouseStatus status, float mx, float my) 
-	{
-	if(status == xplm_MouseDown)this->setTab(c, b);
-	});
+		{
+			if(status == xplm_MouseDown)this->setTab(c, b);
+		});
+
+	// Set all the correct textures
 	b->setTextureIdle(texIdle);
 	b->setTextureHover(texHover);
 	b->setTextureClick(texClick);
@@ -115,6 +119,7 @@ void TabContainer::setTabFontColor(float c[3])
 	color[0] = c[0];
 	color[1] = c[1];
 	color[2] = c[2];
+	// Update the color for all existing buttons
 	for (DisplayElement * de : tabs->getElements()) {
 		if (Button * b = dynamic_cast<Button*>(de)) {
 			b->setFontColor3fv(color);
@@ -127,6 +132,7 @@ void TabContainer::setTabFontColor(float r, float g, float b)
 	color[0] = r;
 	color[1] = g;
 	color[2] = b;
+	// Update the color for all existing buttons
 	for (DisplayElement * de : tabs->getElements()) {
 		if (Button * b = dynamic_cast<Button*>(de)) {
 			b->setFontColor3fv(color);
@@ -137,6 +143,7 @@ void TabContainer::setTabFontColor(float r, float g, float b)
 void TabContainer::setTabFont(std::map<GLchar, Character>* f)
 {
 	font = f;
+	// Update the font for all existing buttons
 	for (DisplayElement * de : tabs->getElements()) {
 		if (Button * b = dynamic_cast<Button*>(de)) {
 			b->setFont(f);
@@ -147,6 +154,7 @@ void TabContainer::setTabFont(std::map<GLchar, Character>* f)
 void TabContainer::setTabFontSize(float size)
 {
 	this->size = size;
+	// Update the font size for all existing buttons
 	for (DisplayElement * de : tabs->getElements()) {
 		if (Button * b = dynamic_cast<Button*>(de)) {
 			b->setFontSize(size);
@@ -157,6 +165,7 @@ void TabContainer::setTabFontSize(float size)
 void TabContainer::setTabTextureIdle(XPLMTextureID idle)
 {
 	texIdle = idle;
+	// Go through all buttons and update their default texture.
 	for (DisplayElement * de : tabs->getElements()) {
 		if (Button * b = dynamic_cast<Button*>(de)) {
 			b->setTextureIdle(idle);
@@ -167,6 +176,7 @@ void TabContainer::setTabTextureIdle(XPLMTextureID idle)
 void TabContainer::setTabTextureHover(XPLMTextureID hover)
 {
 	texHover = hover;
+	// Go through all buttons and update their hover texture.
 	for (DisplayElement * de : tabs->getElements()) {
 		if (Button * b = dynamic_cast<Button*>(de)) {
 			b->setTextureHover(hover);
@@ -177,6 +187,7 @@ void TabContainer::setTabTextureHover(XPLMTextureID hover)
 void TabContainer::setTabTextureClick(XPLMTextureID click)
 {
 	texClick = click;
+	// Go through all buttons and update their click texture.
 	for (DisplayElement * de : tabs->getElements()) {
 		if (Button * b = dynamic_cast<Button*>(de)) {
 			b->setTextureClick(click);
@@ -187,6 +198,12 @@ void TabContainer::setTabTextureClick(XPLMTextureID click)
 void TabContainer::setTabTextureActive(XPLMTextureID active)
 {
 	texActive = active;
+	// Go through all buttons and update their active texture.
+	for (DisplayElement * de : tabs->getElements()) {
+		if (Button * b = dynamic_cast<Button*>(de)) {
+			b->setTextureClick(active);
+		}
+	}
 }
 
 void TabContainer::setTab(Container * c, Button * b)

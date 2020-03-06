@@ -478,7 +478,7 @@ void setupContainer() {
 	char* tmpPath = new char[255];
 
 	pagesPilot[0] = new Container();
-	pagesPilot[0]->setBounds(384, 0, 384, 564);
+	pagesPilot[0]->setBounds(0, 0, 384, 564);
 	displays[1]->addElement(pagesPilot[0]);
 
 	//XPLMDebugString("main.cpp: Loading airport data.\n");
@@ -534,10 +534,17 @@ void setupContainer() {
 	navRoseND_FO->setFont(font_AirbusPFD);
 	pagesCopilot[0]->addElement(navRoseND_FO);
 
+
 	//General Info Page (index 1):
 	pagesPilot[1] = new Container();
 	pagesPilot[1]->setBounds(0, -96, 384, 564);
-	displays[1]->addElement(pagesPilot[1]);
+	//displays[1]->addElement(pagesPilot[1]);
+
+	// Dummy container:
+	Container * cont_dummy = new Container();
+	cont_dummy->setBounds(384, 96, 384, 564);
+	cont_dummy->addElement(pagesPilot[1]);
+	displays[1]->addElement(cont_dummy);
 
 	//Engine Stats:
 	Rect * rectEngine = new Rect();
